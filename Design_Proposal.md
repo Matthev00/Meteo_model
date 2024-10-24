@@ -1,8 +1,15 @@
 # Model meteorologiczny
 
-## Funckjonalność programu
+## Opis projektu
 Projekt ma charakter głównie researchowy. Planujemy zapoznać się z literaturą oraz przeprowadzić serię eksperymentów w celu wytytrenowania najlepszego modelu. Po uzykaniu zadowalającego modelu zostanie on wykorzystany do przewidywania przyszłych wartości meteorologicznych. Predykcje modelu zostaną zwizualizowane na prostych wykresach liniowych. Dane zbierzemy z [meteostat](https://dev.meteostat.net/guide.html).  
 Pomysł projektu bazuję na artykule <https://link.springer.com/article/10.1007/s00500-020-04954-0#Sec16>, ale wprowadza parę zmian. Planujemy zmienić źródło danych oraz nasz projekt zakłada proste użycie modelu dla aktualnych danych.
+
+## Funkcjonalność programu
+- Finalna wersja będzie posiadała możliwośc odtworzenia eksprymentów dokonanych przez nasz.
+- Uwieńczeniem naszych prac będzie równiez prosta aplikacja wizualująza predykcje meteorologiczne takie jak:
+  - temperatura
+  - ciśnienie
+  - opady
 
 ## Planowy zakres eksperymentów
 Planujemy przetestować natępujące architektóry sieci neuronowych:
@@ -25,6 +32,7 @@ Dla każdego z eksperymentów przetestowany zostanie również różny zakres se
 **Meteostat** - pozyskiwania danych  
 **Google Colab** - trenowania modeli   
 **MatPlotLib** - wizualizacja
+**Streamlit** - prosta aplikacja
 
 ## Bibliografia
 
@@ -37,7 +45,7 @@ Dla każdego z eksperymentów przetestowany zostanie również różny zakres se
 | Tydzień | Planowane postepy | Kamień Milowy|
 | --------|-------------------| -------------|
 | **4.** (21.10 - 27.10) | Wstepne zapoznanie się z zagadnieniami związanymi z projektem, Design Proposal | **Design Proposal**|
- **5.** (28.10 - 03.11) | Ustawienie środowiska pracy(szkielet projektu), Dokladne zapoznanie się z literaturą | - |
+| **5.** (28.10 - 03.11) | Ustawienie środowiska pracy(szkielet projektu), Dokladne zapoznanie się z literaturą | - |
 | **6.** (04.11 - 10.11) | Zgromadzenie danych oraz weryfikacja ich poprawności|-|
 | **7.** (11.11 - 17.11) | Analiza danych, Przygotowanie DataLoader'ów |-|
 | **8.** (18.11 - 24.11) | Konfiguracja środowiska eksperymantalnego, Przygotowanie eksperymenów|**Postęp analizy literaturowej**|
