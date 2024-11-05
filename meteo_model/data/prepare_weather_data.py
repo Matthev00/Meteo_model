@@ -21,12 +21,35 @@ def collect_and_save_weather_data(stations: dict[str, WeatherStation], start_yea
 
 
 def main():
+    
     WARSAW_LAT, WARSAW_LON = 52.23, 21.01
-    START_YEAR, END_YEAR = 2000, 2020
+    WROCLAW_LAT, WROCLAW_LON = 51.07, 17.02
+    POZNAN_LAT, POZNAN_LON = 52.24, 16.55
+    KRAKOW_LAT, KRAKOW_LON = 50.04, 19.56
+    BIALYSTOK_LAT, BIALYSTOK_LON = 53.07, 23.09
+
+    START_YEAR, END_YEAR = 2004, 2024
     BASE_PATH, STATIONS_CACHE_DIR = Path("data/raw/weather_data"), Path("data/cache")
 
     Stations.cache_dir = str(STATIONS_CACHE_DIR)
-    stations_df = get_nearest_stations(WARSAW_LAT, WARSAW_LON)
+
+    stations_df = get_nearest_stations(WARSAW_LAT, WARSAW_LON, 1)
+    stations_dict = stations_to_dict(stations_df)
+    collect_and_save_weather_data(stations_dict, START_YEAR, END_YEAR, BASE_PATH)
+
+    stations_df = get_nearest_stations(POZNAN_LAT, POZNAN_LON, 1)
+    stations_dict = stations_to_dict(stations_df)
+    collect_and_save_weather_data(stations_dict, START_YEAR, END_YEAR, BASE_PATH)
+
+    stations_df = get_nearest_stations(WROCLAW_LAT, WROCLAW_LON, 1)
+    stations_dict = stations_to_dict(stations_df)
+    collect_and_save_weather_data(stations_dict, START_YEAR, END_YEAR, BASE_PATH)
+
+    stations_df = get_nearest_stations(BIALYSTOK_LAT, BIALYSTOK_LON, 1)
+    stations_dict = stations_to_dict(stations_df)
+    collect_and_save_weather_data(stations_dict, START_YEAR, END_YEAR, BASE_PATH)
+
+    stations_df = get_nearest_stations(KRAKOW_LAT, KRAKOW_LON, 1)
     stations_dict = stations_to_dict(stations_df)
     collect_and_save_weather_data(stations_dict, START_YEAR, END_YEAR, BASE_PATH)
 
