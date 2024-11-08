@@ -22,10 +22,10 @@ def save_data_to_csv(data: pd.DataFrame, path: Path):
 def get_station_name_from_city_name(city_name: str) -> str:
     """Get the station name from the city name."""
     staions = {
-        "Warszawa": "Warszawa-Okecie",
-        "Krakow": "Krakow",
-        "Wroclaw": "Wroclaw_I",
-        "Poznan": "Poznan",
-        "Biaystok": "Biaystok",
+        "Warszawa": "WARSAW",
+        "Krakow": "KRAKOW",
+        "Wroclaw": "WROCLAW",
+        "Poznan": "POZNAN",
+        "Biaystok": "BIALYSTOK",
     }
     return staions.get(city_name, city_name)
