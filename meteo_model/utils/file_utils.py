@@ -26,6 +26,6 @@ def get_station_name_from_city_name(city_name: str) -> str:
         "Krakow": "KRAKOW",
         "Wroclaw": "WROCLAW",
         "Poznan": "POZNAN",
-        "Biaystok": "BIALYSTOK",
+        "Bialystok": "BIALYSTOK",
     }
     return staions.get(city_name, city_name)
