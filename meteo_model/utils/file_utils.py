@@ -17,3 +17,15 @@ def prepare_directory(path: Path):
 def save_data_to_csv(data: pd.DataFrame, path: Path):
     """Save weather data to a CSV file."""
     data.to_csv(path, index=False)
+
+
+def get_station_name_from_city_name(city_name: str) -> str:
+    """Get the station name from the city name."""
+    staions = {
+        "Warszawa": "Warszawa-Okecie",
+        "Krakow": "Krakow",
+        "Wroclaw": "Wroclaw_I",
+        "Poznan": "Poznan",
+        "Biaystok": "Biaystok",
+    }
+    return staions.get(city_name, city_name)
