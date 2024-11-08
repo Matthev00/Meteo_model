@@ -1,9 +1,12 @@
+from config import LOCATIONS, START_YEAR, END_YEAR, BASE_PATH, STATIONS_CACHE_DIR
 from datetime import datetime
 from pathlib import Path
 from meteostat import Stations
 from meteo_model.station import WeatherStation
-from meteo_model.data.weather_data import get_nearest_stations, stations_to_dict, get_weather_data
+from meteo_model.data.weather_data import stations_to_dict, get_weather_data
 from meteo_model.utils.file_utils import sanitize_filename, prepare_directory, save_data_to_csv
+
+Stations.cache_dir = str(STATIONS_CACHE_DIR)
 
 
 def collect_and_save_weather_data(stations: dict[str, WeatherStation], start_year: int, end_year: int, base_path: Path):
@@ -20,38 +23,17 @@ def collect_and_save_weather_data(stations: dict[str, WeatherStation], start_yea
                 save_data_to_csv(weather_data, file_path)
 
 
+def process_location_data(lat: float, lon: float, start_year: int, end_year: int, base_path: Path) -> None:
+    """
+    Collects and saves weather data for a specific location and time range.
+    """
+    stations_dict = stations_to_dict(LOCATIONS)
+    collect_and_save_weather_data(stations_dict, START_YEAR, END_YEAR, Path(BASE_PATH))
+
+
 def main():
-    
-    WARSAW_LAT, WARSAW_LON = 52.23, 21.01
-    WROCLAW_LAT, WROCLAW_LON = 51.07, 17.02
-    POZNAN_LAT, POZNAN_LON = 52.24, 16.55
-    KRAKOW_LAT, KRAKOW_LON = 50.04, 19.56
-    BIALYSTOK_LAT, BIALYSTOK_LON = 53.07, 23.09
-
-    START_YEAR, END_YEAR = 2004, 2024
-    BASE_PATH, STATIONS_CACHE_DIR = Path("data/raw/weather_data"), Path("data/cache")
-
-    Stations.cache_dir = str(STATIONS_CACHE_DIR)
-
-    stations_df = get_nearest_stations(WARSAW_LAT, WARSAW_LON, 1)
-    stations_dict = stations_to_dict(stations_df)
-    collect_and_save_weather_data(stations_dict, START_YEAR, END_YEAR, BASE_PATH)
-
-    stations_df = get_nearest_stations(POZNAN_LAT, POZNAN_LON, 1)
-    stations_dict = stations_to_dict(stations_df)
-    collect_and_save_weather_data(stations_dict, START_YEAR, END_YEAR, BASE_PATH)
-
-    stations_df = get_nearest_stations(WROCLAW_LAT, WROCLAW_LON, 1)
-    stations_dict = stations_to_dict(stations_df)
-    collect_and_save_weather_data(stations_dict, START_YEAR, END_YEAR, BASE_PATH)
-
-    stations_df = get_nearest_stations(BIALYSTOK_LAT, BIALYSTOK_LON, 1)
-    stations_dict = stations_to_dict(stations_df)
-    collect_and_save_weather_data(stations_dict, START_YEAR, END_YEAR, BASE_PATH)
-
-    stations_df = get_nearest_stations(KRAKOW_LAT, KRAKOW_LON, 1)
-    stations_dict = stations_to_dict(stations_df)
-    collect_and_save_weather_data(stations_dict, START_YEAR, END_YEAR, BASE_PATH)
+    stations_dict = stations_to_dict(LOCATIONS)
+    collect_and_save_weather_data(stations_dict, START_YEAR, END_YEAR, Path(BASE_PATH))
 
 
 if __name__ == "__main__":

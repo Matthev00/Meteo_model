@@ -1,19 +1,16 @@
-from meteostat import Stations, Daily, Point
+from meteostat import Daily, Point
 from datetime import datetime
 from meteo_model.station import WeatherStation
 import pandas as pd
 
 
-def get_nearest_stations(lat: float, lon: float, limit: int = 5) -> pd.DataFrame:
-    """Get the nearest weather stations to a location."""
-    return Stations().nearby(lat, lon).fetch(limit=limit)
-
-
-def stations_to_dict(stations: pd.DataFrame) -> dict[str, WeatherStation]:
-    """Convert a DataFrame of stations to a dictionary with station names as keys."""
+def stations_to_dict(locations: dict[str, tuple[float, float]]) -> dict[str, WeatherStation]:
+    """
+    Convert a dictionary of locations to a dictionary of WeatherStation objects.
+    """
     return {
-        row['name']: WeatherStation(row['name'], Point(row['latitude'], row['longitude'], row['elevation']))
-        for _, row in stations.iterrows()
+        name: WeatherStation(name, Point(lat, lon))
+        for name, (lat, lon) in locations.items()
     }
 
 
