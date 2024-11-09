@@ -1,0 +1,10 @@
+stages:
+  - lint
+
+mypy:
+  stage: lint
+  script:
+    - pip install mypy
+    - mypy path/to/your_code_directory
+  only:
+    - pushes
