@@ -2,15 +2,16 @@ import torch
 from torch.utils.data import Dataset
 import pandas as pd
 from pathlib import Path
-from datetime import datetime, timedelta
 from collections import defaultdict
+
+from meteo_model.data.config import LOCATIONS_NAMES, DATASET_START_YEAR, DATASET_END_YEAR
 
 
 class MeteoDataset(Dataset):
     def __init__(
         self,
         root_dir: Path = Path("data/processed/weather_data"),
-        location=None,
+        location: list[str] = None,
         input_len: int = 32,
         output_len: int = 8,
     ):
@@ -34,15 +35,15 @@ class MeteoDataset(Dataset):
         self.input_len = input_len
         self.output_len = output_len
 
-        if not location:
-            location = ["BIALYSTOK", "WARSAW", "WROCLAW", "KRAKOW", "POZNAN"]
+        if location is None:
+            location = LOCATIONS_NAMES
         self.location = location
 
-        self.start_year = 2012
-        self.end_year = 2024
+        self.start_year = DATASET_START_YEAR
+        self.end_year = DATASET_END_YEAR
         self.data = self._load_data()
 
-    def _load_data(self):
+    def _load_data(self) -> dict[dict[pd.DataFrame]]:
         """
         Load data from the specified directory.
         """
@@ -57,13 +58,13 @@ class MeteoDataset(Dataset):
 
         return all_data
 
-    def __len__(self):
+    def __len__(self) -> int:
         total_days = 0
         for year in range(self.start_year, self.end_year + 1):
             total_days += self.data[year][self.location[0]].shape[0]
         return total_days - self.input_len - self.output_len
 
-    def _get_day(self, idx):
+    def _get_day(self, idx: int) -> tuple[int, int]:
         """
         Get the year and day corresponding to the index.
         """
@@ -75,7 +76,11 @@ class MeteoDataset(Dataset):
 
         return year, day
 
-    def _get_sequence(self, year: int, start_day: int, end_day: int):
+    def _get_sequence(self, year: int, start_day: int, end_day: int) -> list[list[list[float]]]:
+        """
+        Get the sequence of data for the given year and days.
+        Checks if the start_day and end_day are within the bounds of the given year.
+        """
         sequence = []
         for loc in self.location:
             _end_day = end_day
@@ -93,17 +98,23 @@ class MeteoDataset(Dataset):
 
         return sequence
 
-    def _get_target_sequence(self, year, day):
+    def _get_target_sequence(self, year: int, day: int) -> list[list[list[float]]]:
         start_day = day - self.input_len + self.output_len
         end_day = day + self.output_len
         return self._get_sequence(year, start_day, end_day)
 
-    def _get_input_sequence(self, year, day):
+    def _get_input_sequence(self, year: int, day: int) -> list[list[list[float]]]:
         start_day = day - self.input_len
         end_day = day
         return self._get_sequence(year, start_day, end_day)
 
-    def __getitem__(self, idx) -> tuple:
+    def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
+        """
+        Get the input and target sequences for the given index.
+        Returns:
+            tuple[torch.Tensor, torch.Tensor]: input_sequence, target_sequence
+            In sizes (num_locations, input_length, num_features)
+        """
         year, day = self._get_day(idx)
 
         input_sequence = torch.tensor(self._get_input_sequence(year, day), dtype=torch.float32)

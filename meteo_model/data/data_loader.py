@@ -22,7 +22,7 @@ def create_dataloaders(
     test_dataset = Subset(dataset, range(split_idx, len(dataset)))
 
     train_dataloader = DataLoader(
-        dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers
+        train_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers
     )
     test_dataloader = DataLoader(
         test_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers
