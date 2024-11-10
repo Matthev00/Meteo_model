@@ -1,0 +1,118 @@
+import torch
+from torch.utils.data import Dataset
+import pandas as pd
+from pathlib import Path
+from datetime import datetime, timedelta
+from collections import defaultdict
+
+
+class MeteoDataset(Dataset):
+    def __init__(
+        self,
+        root_dir: Path = Path("data/processed/weather_data"),
+        location=None,
+        input_len: int = 32,
+        output_len: int = 8,
+    ):
+        """
+        Dataset for weather data.
+
+        Args:
+            root_dir (Path): Path to the directory containing the data.
+            location (list): List of locations. If empty, all locations will be used.
+            input_len (int): Number of days to look back.
+            output_len (int): Number of days to predict.
+        """
+        if output_len < 1:
+            raise ValueError("output_len should be greater than 0.")
+        if not root_dir.exists():
+            raise ValueError("root_dir does not exist.")
+        if root_dir.exists() and not root_dir.is_dir():
+            raise ValueError("root_dir should be a directory.")
+        
+        self.root_dir = root_dir
+        self.input_len = input_len
+        self.output_len = output_len
+
+        if not location:
+            location = ["BIALYSTOK", "WARSAW", "WROCLAW", "KRAKOW", "POZNAN"]
+        self.location = location
+
+        self.start_year = 2012 
+        self.end_year = 2024
+        self.data = self._load_data()
+
+    def _load_data(self):
+        """
+        Load data from the specified directory.
+        """
+        all_data = defaultdict(dict)
+
+        for year in range(self.start_year, self.end_year + 1):
+            for loc in self.location:
+                file_path = self.root_dir / str(year) / f"{loc}_weather_data.csv"
+                if file_path.exists():
+                    df = pd.read_csv(file_path)
+                    all_data[year][loc] = df    
+        
+        return all_data
+               
+    def __len__(self):
+        total_days = 0
+        for year in range(self.start_year, self.end_year + 1):
+            total_days += self.data[year][self.location[0]].shape[0]
+        return total_days - self.input_len - self.output_len
+    
+
+    def _get_day(self, idx):
+        """
+        Get the year and day corresponding to the index.
+        """
+        day = idx + self.input_len
+        year = self.start_year
+        while day >= self.data[year][self.location[0]].shape[0]:
+            day -= self.data[year][self.location[0]].shape[0]
+            year += 1
+
+        return year, day
+    
+    def _get_sequence(self, year:int, start_day:int, end_day:int):
+        sequence = []
+        for loc in self.location:
+            if start_day <= 0:
+                sequence.append(self.data[year-1][loc].iloc[start_day:, :].values.tolist())
+                sequence[-1] += self.data[year][loc].iloc[:end_day, :].values.tolist()
+
+            elif end_day >= self.data[year][loc].shape[0]:
+                sequence.append(self.data[year][loc].iloc[start_day:, :].values.tolist())
+                end_day -= self.data[year][loc].shape[0]
+                sequence[-1] += self.data[year+1][loc].iloc[:end_day, :].values.tolist()
+
+            else:
+                sequence.append(self.data[year][loc].iloc[start_day:end_day, :].values.tolist())
+
+        return sequence
+    
+    def _get_target_sequence(self, year, day):
+        start_day = day - self.input_len + self.output_len
+        end_day = day + self.output_len
+        return self._get_sequence(year, start_day, end_day)
+    
+    def _get_input_sequence(self, year, day):
+        start_day = day - self.input_len
+        end_day = day
+        return self._get_sequence(year, start_day, end_day)
+   
+    def __getitem__(self, idx) -> tuple:
+        year, day = self._get_day(idx)
+
+        input_sequence = self._get_input_sequence(year, day)
+        target_sequence = self._get_target_sequence(year, day)
+
+        return input_sequence, target_sequence
+
+
+if __name__ == "__main__":
+    data = MeteoDataset()
+    print(len(data))
+    print(data[333])
