@@ -8,13 +8,12 @@ def stations_to_dict(locations: dict[str, tuple[float, float]]) -> dict[str, Wea
     """
     Convert a dictionary of locations to a dictionary of WeatherStation objects.
     """
-    return {
-        name: WeatherStation(name, Point(lat, lon))
-        for name, (lat, lon) in locations.items()
-    }
+    return {name: WeatherStation(name, Point(lat, lon)) for name, (lat, lon) in locations.items()}
 
 
-def get_weather_data(stations: dict[str, WeatherStation], start: datetime, end: datetime) -> pd.DataFrame:
+def get_weather_data(
+    stations: dict[str, WeatherStation], start: datetime, end: datetime
+) -> pd.DataFrame:
     """Get weather data for a list of stations."""
     data_frames = [
         Daily(station.point, start, end).fetch().assign(station=station_name)

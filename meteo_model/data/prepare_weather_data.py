@@ -9,7 +9,9 @@ from meteo_model.utils.file_utils import sanitize_filename, prepare_directory, s
 Stations.cache_dir = str(STATIONS_CACHE_DIR)
 
 
-def collect_and_save_weather_data(stations: dict[str, WeatherStation], start_year: int, end_year: int, base_path: Path):
+def collect_and_save_weather_data(
+    stations: dict[str, WeatherStation], start_year: int, end_year: int, base_path: Path
+):
     """Collect and save weather data for each year in the given range."""
     for year in range(start_year, end_year + 1):
         year_path = base_path / str(year)
@@ -17,13 +19,17 @@ def collect_and_save_weather_data(stations: dict[str, WeatherStation], start_yea
 
         for station, station_data in stations.items():
             sanitized_station = sanitize_filename(station)
-            weather_data = get_weather_data({station: station_data}, datetime(year, 1, 1), datetime(year, 12, 31))
+            weather_data = get_weather_data(
+                {station: station_data}, datetime(year, 1, 1), datetime(year, 12, 31)
+            )
             if not weather_data.empty:
                 file_path = year_path / f"{sanitized_station}_weather_data.csv"
                 save_data_to_csv(weather_data, file_path)
 
 
-def process_location_data(lat: float, lon: float, start_year: int, end_year: int, base_path: Path) -> None:
+def process_location_data(
+    lat: float, lon: float, start_year: int, end_year: int, base_path: Path
+) -> None:
     """
     Collects and saves weather data for a specific location and time range.
     """
