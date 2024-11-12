@@ -38,15 +38,17 @@ lint:
 format:
 	black --config pyproject.toml zprp_meteo_model
 
-
+.PHONY: prepare_data
+prepare_data:
+	$(PYTHON_INTERPRETER) meteo_model/data/prepare_weather_data.py
+	$(PYTHON_INTERPRETER) meteo_model/data/data_cleaning.py
 
 
 ## Set up python interpreter environment
 .PHONY: create_environment
 create_environment:
-	@bash -c "if [ ! -z `which virtualenvwrapper.sh` ]; then source `which virtualenvwrapper.sh`; mkvirtualenv $(PROJECT_NAME) --python=$(PYTHON_INTERPRETER); else mkvirtualenv.bat $(PROJECT_NAME) --python=$(PYTHON_INTERPRETER); fi"
-	@echo ">>> New virtualenv created. Activate with:\nworkon $(PROJECT_NAME)"
-	
+	$(PYTHON_INTERPRETER) -m venv .venv
+	@echo "Run 'source .venv/bin/activate' to activate the environment"
 
 
 
