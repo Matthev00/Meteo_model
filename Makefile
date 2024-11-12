@@ -29,14 +29,13 @@ clean:
 ## Lint using flake8 and black (use `make format` to do formatting)
 .PHONY: lint
 lint:
-	flake8 zprp_meteo_model
-	isort --check --diff --profile black zprp_meteo_model
-	black --check --config pyproject.toml zprp_meteo_model
+	flake8 meteo_model
+	black --check --config pyproject.toml meteo_model
 
 ## Format source code with black
 .PHONY: format
 format:
-	black --config pyproject.toml zprp_meteo_model
+	black --config pyproject.toml meteo_model
 
 .PHONY: prepare_data
 prepare_data:
