@@ -26,6 +26,11 @@ clean:
 	find . -type f -name "*.py[co]" -delete
 	find . -type d -name "__pycache__" -delete
 
+## Type-check using mypy
+.PHONY: type-check
+type-check:
+	mypy meteo_model
+
 ## Lint using flake8 and black (use `make format` to do formatting)
 .PHONY: lint
 lint:
