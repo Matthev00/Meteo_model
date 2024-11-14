@@ -1,8 +1,10 @@
 import torch
 import math
 from tqdm.auto import tqdm
+from meteo_model.utils.training_utils import mlflow_logging
 
 
+@mlflow_logging
 def train(
     model: torch.nn.Module,
     train_dataloader: torch.utils.data.DataLoader,
@@ -11,6 +13,7 @@ def train(
     loss_fn: torch.nn.Module,
     epochs: int,
     device="cuda",
+    enable_logging=True, 
 ) -> dict[str, list[float]]:
 
     results = {
@@ -21,7 +24,6 @@ def train(
         "Train_RMSE": [],
         "Test_RMSE": [],
     }
-
     for epoch in tqdm(range(epochs)):
         train_mse, train_mae, train_rmse = train_step(
             model=model,
