@@ -12,6 +12,7 @@ class MeteoDataset(Dataset):
         self,
         root_dir: Path = Path("data/processed/weather_data"),
         location: list[str] = None,
+        target_location: str = LOCATIONS_NAMES[0],
         input_len: int = 32,
         output_len: int = 8,
     ):
@@ -21,6 +22,7 @@ class MeteoDataset(Dataset):
         Args:
             root_dir (Path): Path to the directory containing the data.
             location (list): List of locations. If empty, all locations will be used.
+            target_location (str): Target Location.
             input_len (int): Number of days to look back.
             output_len (int): Number of days to predict.
         """
@@ -38,6 +40,7 @@ class MeteoDataset(Dataset):
         if location is None:
             location = LOCATIONS_NAMES
         self.location = location
+        self.target_location = target_location
 
         self.start_year = DATASET_START_YEAR
         self.end_year = DATASET_END_YEAR
@@ -76,13 +79,13 @@ class MeteoDataset(Dataset):
 
         return year, day
 
-    def _get_sequence(self, year: int, start_day: int, end_day: int) -> list[list[list[float]]]:
+    def _get_sequence(self, year: int, start_day: int, end_day: int, locations: list[str]) -> list[list[list[float]]]:
         """
         Get the sequence of data for the given year and days.
         Checks if the start_day and end_day are within the bounds of the given year.
         """
         sequence = []
-        for loc in self.location:
+        for loc in locations:
             _end_day = end_day
             if start_day < 0:
                 sequence.append(self.data[year - 1][loc].iloc[start_day:, :].values.tolist())
@@ -101,12 +104,12 @@ class MeteoDataset(Dataset):
     def _get_target_sequence(self, year: int, day: int) -> list[list[list[float]]]:
         start_day = day - self.input_len + self.output_len
         end_day = day + self.output_len
-        return self._get_sequence(year, start_day, end_day)
+        return self._get_sequence(year, start_day, end_day, [self.target_location])
 
     def _get_input_sequence(self, year: int, day: int) -> list[list[list[float]]]:
         start_day = day - self.input_len
         end_day = day
-        return self._get_sequence(year, start_day, end_day)
+        return self._get_sequence(year, start_day, end_day, self.location)
 
     def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
         """
