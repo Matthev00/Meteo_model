@@ -33,10 +33,10 @@ def main():
 
     params = {
         "location": [["BIALYSTOK", "WARSAW", "WROCLAW", "KRAKOW", "POZNAN"], ["BIALYSTOK"]],
-        "input_len": [32, 16],
-        "batch_size": [16, 8],
-        "lr": [0.001, 0.01],
-        "epochs": [5, 10],
+        "input_len": [32],
+        "batch_size": [16],
+        "lr": [0.001],
+        "epochs": [5],
     }
 
     keys, values = zip(*params.items())
@@ -44,7 +44,6 @@ def main():
 
     for combo in combinations:
         model = Model(input_size=combo["input_len"], output_size=OUTPUT_LEN).to(DEVICE)
-        epochs = combo["epochs"]
         OPTIMIZER = torch.optim.Adam(model.parameters(), lr=combo["lr"])
         train_loader, test_loader = create_dataloaders(
             location=combo["location"],
@@ -59,10 +58,11 @@ def main():
             model=model,
             train_dataloader=train_loader,
             test_dataloader=test_loader,
-            optimizer=torch.optim.Adam(model.parameters(), lr=0.001),
+            optimizer=OPTIMIZER,
             loss_fn=torch.nn.MSELoss(),
             epochs=combo["epochs"],
             device=DEVICE,
+            enable_logging=False,
         )
 
 
