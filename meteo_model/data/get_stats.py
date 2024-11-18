@@ -9,16 +9,8 @@ from config import PATH_TO_STATS, PATHS_TO_DATA_FILES_STR
 
 
 def get_dataframe(paths):
-    dataframes = [(pd.read_csv(file_name), file_name) for file_name in paths]
-
-    warsaw_dfs = [(df, file_name) for df, file_name in dataframes if file_name.split("/")[-1].split("_")[0] == "WARSAW"]
-    krakow_dfs = [(df, file_name) for df, file_name in dataframes if file_name.split("/")[-1].split("_")[0] == "KRAKOW"]
-    wroclaw_dfs = [(df, file_name) for df, file_name in dataframes if file_name.split("/")[-1].split("_")[0] == "WROCLAW"]
-    poznan_dfs = [(df, file_name) for df, file_name in dataframes if file_name.split("/")[-1].split("_")[0] == "POZNAN"]
-    bialystok_dfs = [(df, file_name) for df, file_name in dataframes if file_name.split("/")[-1].split("_")[0] == "BIALYSTOK"]
-
-    dfs = warsaw_dfs + krakow_dfs + wroclaw_dfs + poznan_dfs + bialystok_dfs
-    return pd.concat([df for df, _ in dfs])
+    dataframes = [pd.read_csv(file_name) for file_name in paths]
+    return pd.concat(dataframes)
 
 def get_stat_json(df : pd.DataFrame, indent = 4) -> str:
     return df.describe().to_json(indent=indent)
