@@ -42,6 +42,7 @@ lint:
 format:
 	black --config pyproject.toml meteo_model
 
+## Downloading and cleaning data
 .PHONY: prepare_data
 prepare_data:
 	$(PYTHON_INTERPRETER) meteo_model/data/prepare_weather_data.py
