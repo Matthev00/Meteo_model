@@ -91,11 +91,10 @@ if __name__== "__main__":
     with open(PATH_TO_STATS) as f:
         stats_ = json.load(f)
 
-
-    variables = ['tavg', 'tmin', 'tmax', 'prcp', 'snow', 'sin_wdir', 'cos_wdir', 'wspd', 'pres']
     plt.figure(figsize=(12, 10))
     huge_df = get_dataframe(glob(PATHS_TO_DATA_FILES_STR))
     normalised = normalize_data(huge_df, stats_)
+    variables = normalised.columns
 
     for i, var in enumerate(variables, 1):
         plt.subplot(5, 2, i)  # 5 rows, 2 columns grid
