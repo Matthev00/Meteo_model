@@ -77,7 +77,7 @@ if __name__== "__main__":
     normalised = normalize_data(huge_df)
 
     for i, var in enumerate(variables, 1):
-        plt.subplot(5, 2, i)  # 4 rows, 2 columns grid
+        plt.subplot(5, 2, i)  # 5 rows, 2 columns grid
         plt.hist(normalised.dropna(subset=[var])[var], bins=100, color='blue')
         plt.title(var)
         plt.xlabel('Value')
