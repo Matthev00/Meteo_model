@@ -13,3 +13,6 @@ STATIONS_CACHE_DIR: str = "data/cache"
 DATASET_START_YEAR: int = 2012
 DATASET_END_YEAR: int = 2024
 LOCATIONS_NAMES = list(LOCATIONS.keys())
+
+PATHS_TO_DATA_FILES_STR = "data/processed/weather_data/*/*.csv"
+PATH_TO_STATS = "data/processed/stats.json"
