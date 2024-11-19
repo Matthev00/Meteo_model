@@ -5,7 +5,14 @@ import torch
 
 
 class WeatherModelLSTM(BaseWeatherModel):
-    def __init__(self, num_features: int, num_locations: int, output_len: int, hidden_size: int, num_layers: int):
+    def __init__(
+        self,
+        num_features: int,
+        num_locations: int,
+        output_len: int,
+        hidden_size: int,
+        num_layers: int,
+    ):
         """
         Initialize the WeatherModelLSTM.
         Args:
@@ -16,25 +23,28 @@ class WeatherModelLSTM(BaseWeatherModel):
             num_layers (int): The number of layers in the LSTM.
         """
         super(WeatherModelLSTM, self).__init__(num_features, num_locations, output_len)
-        self.submodels = nn.ModuleList([
-            nn.Sequential(
-                LSTM(num_features, hidden_size, num_layers, batch_first=True),
-                nn.Linear(hidden_size, num_features)
-            ) for _ in range(num_locations)
-        ])
+        self.submodels = nn.ModuleList(
+            [
+                nn.Sequential(
+                    LSTM(num_features, hidden_size, num_layers, batch_first=True),
+                    nn.Linear(hidden_size, num_features),
+                )
+                for _ in range(num_locations)
+            ]
+        )
         self.final_fc = nn.Linear(num_locations, 1)
 
     def forecast(self, x: torch.Tensor) -> torch.Tensor:
         outputs = []
         for i, submodel in enumerate(self.submodels):
-            location_input = x[:, i, :, :]  
+            location_input = x[:, i, :, :]
             lstm, fc = submodel[0], submodel[1]
             output, _ = lstm(location_input)  # (B, L, H)
             final_output = fc(output)  # (B, L, F)
             outputs.append(final_output)
-        
-        stacked_outputs = torch.stack(outputs, dim=1) 
-        return stacked_outputs 
+
+        stacked_outputs = torch.stack(outputs, dim=1)
+        return stacked_outputs
 
     def forward(self, X: torch.Tensor) -> torch.Tensor:
         batch_size, num_locations, sequence_length, num_features = X.size()
@@ -43,8 +53,8 @@ class WeatherModelLSTM(BaseWeatherModel):
         for _ in range(self.output_len):
             X = X.view(batch_size, num_locations, sequence_length, num_features)
             yhat = self.forecast(X)
-            yhat = yhat[:, :, -1, :] 
-            predictions.append(yhat.unsqueeze(2))  
+            yhat = yhat[:, :, -1, :]
+            predictions.append(yhat.unsqueeze(2))
 
             new_X = torch.roll(X, shifts=-1, dims=2).clone()
             new_X[:, :, -1, :] = yhat
@@ -52,8 +62,8 @@ class WeatherModelLSTM(BaseWeatherModel):
 
         predictions = torch.cat(predictions, dim=2)
 
-        predictions = predictions.permute(0, 2, 3, 1) 
-        final_output = self.final_fc(predictions)  
+        predictions = predictions.permute(0, 2, 3, 1)
+        final_output = self.final_fc(predictions)
         final_output = final_output.permute(0, 3, 1, 2)
 
-        return final_output 
+        return final_output
