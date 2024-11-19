@@ -102,7 +102,7 @@ class MeteoDataset(Dataset):
         return sequence
 
     def _get_target_sequence(self, year: int, day: int) -> list[list[list[float]]]:
-        start_day = day - self.input_len + self.output_len
+        start_day = day 
         end_day = day + self.output_len
         return self._get_sequence(year, start_day, end_day, [self.target_location])
 
