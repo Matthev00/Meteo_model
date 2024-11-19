@@ -22,6 +22,7 @@ class WeatherModelLSTM(BaseWeatherModel):
                 nn.Linear(hidden_size, num_features)
             ) for _ in range(num_locations)
         ])
+        self.final_fc = nn.Linear(num_locations, 1)
 
     def forecast(self, x: torch.Tensor) -> torch.Tensor:
         outputs = []
@@ -37,14 +38,22 @@ class WeatherModelLSTM(BaseWeatherModel):
 
     def forward(self, X: torch.Tensor) -> torch.Tensor:
         batch_size, num_locations, sequence_length, num_features = X.size()
+        predictions = []
 
         for _ in range(self.output_len):
             X = X.view(batch_size, num_locations, sequence_length, num_features)
             yhat = self.forecast(X)
             yhat = yhat[:, :, -1, :] 
+            predictions.append(yhat.unsqueeze(2))  
 
             new_X = torch.roll(X, shifts=-1, dims=2).clone()
             new_X[:, :, -1, :] = yhat
             X = new_X
 
-        return X
+        predictions = torch.cat(predictions, dim=2)
+
+        predictions = predictions.permute(0, 2, 3, 1) 
+        final_output = self.final_fc(predictions)  
+        final_output = final_output.permute(0, 3, 1, 2)
+
+        return final_output 
