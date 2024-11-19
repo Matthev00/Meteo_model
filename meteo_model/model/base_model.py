@@ -4,7 +4,7 @@ import torch
 
 
 class BaseWeatherModel(ABC, nn.Module):
-    def __init__(self, num_features, num_locations: int, output_len: int):
+    def __init__(self, num_features: int, num_locations: int, output_len: int):
         """
         Args:
             num_features (int): The number of features in the input data.

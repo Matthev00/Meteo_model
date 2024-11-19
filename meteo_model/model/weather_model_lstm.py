@@ -34,7 +34,10 @@ class WeatherModelLSTM(BaseWeatherModel):
         )
         self.final_fc = nn.Linear(num_locations, 1)
 
-    def forecast(self, x: torch.Tensor) -> torch.Tensor:
+    def process_locations(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Process input data for each location using the corresponding LSTM model.
+        """
         outputs = []
         for i, submodel in enumerate(self.submodels):
             location_input = x[:, i, :, :]
@@ -47,12 +50,13 @@ class WeatherModelLSTM(BaseWeatherModel):
         return stacked_outputs
 
     def forward(self, X: torch.Tensor) -> torch.Tensor:
-        batch_size, num_locations, sequence_length, num_features = X.size()
+        """
+        Iteratively predicts output_len steps for the given input data.
+        """
         predictions = []
 
         for _ in range(self.output_len):
-            X = X.view(batch_size, num_locations, sequence_length, num_features)
-            yhat = self.forecast(X)
+            yhat = self.process_locations(X)
             yhat = yhat[:, :, -1, :]
             predictions.append(yhat.unsqueeze(2))
 
