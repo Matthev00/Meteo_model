@@ -7,6 +7,7 @@ def mlflow_logging(func):
     @wraps(func)
     def wrapper(*args, **kwargs) -> dict[str, list[float]]:
         enable_logging = kwargs.pop('enable_logging', True)
+        experiment_name = kwargs.pop('experiment_name', "MeteoModelForecasting")
         if not enable_logging:
             return func(*args, **kwargs)
         
@@ -16,7 +17,7 @@ def mlflow_logging(func):
         epochs = kwargs.get('epochs')
         device = kwargs.get('device', 'cuda')
 
-        mlflow.set_experiment("MeteoModelForecasting")
+        mlflow.set_experiment(experiment_name)
         with mlflow.start_run():  # We can set run name here
             mlflow.log_param("Learning Rate", optimizer.param_groups[0]["lr"])
             # add more parameters here when we establish experiments
