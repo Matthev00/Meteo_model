@@ -32,7 +32,7 @@ class DataCleaner:
             df["wdir"] = df["wdir"].interpolate(method="nearest", limit=3, limit_direction="both")
             df["wspd"] = df["wspd"].interpolate(method="linear", limit=2, limit_direction="both")
 
-    def calculate_median_by_day(self) -> None:
+    def calculate_median_by_day(self) -> pd.DataFrame:
         """
         Calculate the median values for each day of the year.
         """

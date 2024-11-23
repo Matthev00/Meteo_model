@@ -2,9 +2,10 @@ import glob
 import pandas as pd
 from pathlib import Path
 from meteo_model.data.config import PATH_TO_STATS, PATHS_TO_DATA_FILES_STR
+from typing import Sequence
 
 
-def get_dataframe(paths : list[str | Path]) -> pd.DataFrame:
+def get_dataframe(paths : Sequence[str | Path]) -> pd.DataFrame:
     dataframes = [pd.read_csv(file_name) for file_name in paths]
     return pd.concat(dataframes)
 
