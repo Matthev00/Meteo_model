@@ -53,6 +53,8 @@ class WeatherModelLSTM(BaseWeatherModel):
         """
         Iteratively predicts output_len steps for the given input data.
         """
+        if X.ndim == 3:
+            X = X.unsqueeze(0)
         predictions: list[torch.Tensor] = []
 
         for _ in range(self.output_len):
