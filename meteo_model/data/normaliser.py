@@ -6,8 +6,9 @@ from pathlib import Path
 from meteo_model.data.config import PATH_TO_STATS, PATHS_TO_DATA_FILES_STR
 from meteo_model.data.get_stats import create_stat_file
 import pandas as pd
+from typing import Dict, Any
 
-StatType = dict[dict[str, float]]
+StatType = Dict[str, Any]
 
 
 def _normalise_norm_like(array: pd.Series, attr_name: str, stats: StatType):

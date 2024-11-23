@@ -17,7 +17,7 @@ def train(
     experiment_name="MeteoModelForecasting", 
 ) -> dict[str, list[float]]:
 
-    results = {
+    results: dict[str, list[float]] = {
         "Train_MSE": [],
         "Test_MSE": [],
         "Train_MAE": [],

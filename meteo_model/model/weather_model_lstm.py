@@ -53,7 +53,7 @@ class WeatherModelLSTM(BaseWeatherModel):
         """
         Iteratively predicts output_len steps for the given input data.
         """
-        predictions = []
+        predictions: list[torch.Tensor] = []
         if X.dim() == 3:
             X = X.unsqueeze(0)
 
@@ -66,10 +66,10 @@ class WeatherModelLSTM(BaseWeatherModel):
             new_X[:, :, -1, :] = yhat
             X = new_X
 
-        predictions = torch.cat(predictions, dim=2)
+        predictions_tensor = torch.cat(predictions, dim=2)
 
-        predictions = predictions.permute(0, 2, 3, 1)
-        final_output = self.final_fc(predictions)
+        predictions_tensor = predictions_tensor.permute(0, 2, 3, 1)
+        final_output = self.final_fc(predictions_tensor)
         final_output = final_output.permute(0, 3, 1, 2)
 
         return final_output
