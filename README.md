@@ -4,9 +4,70 @@
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
 </a>
 
-A short description of the project.
+Projekt badawczy mający na celu opracowanie modelu do przewidywania wartości meteorologicznych, takich jak temperatura, ciśnienie i opady. Prognozy będą wizualizowane na prostych wykresach liniowych w dedykowanej aplikacji.
 
-## Project Organization
+---
+
+## **Opis**
+
+Projekt obejmuje:
+- Przegląd literatury naukowej w celu wybrania najlepszych metod.
+- Eksperymenty z różnymi architekturami sieci neuronowych, aby wytrenować najdokładniejszy model prognostyczny.
+- Wizualizację wyników modelu w oparciu o dane aktualne i historyczne.
+
+Projekt jest inspirowany artykułem [Springer](https://link.springer.com/article/10.1007/s00500-020-04954-0#Sec16), jednak wprowadza zmiany, takie jak:
+- Wykorzystanie innego źródła danych: [Meteostat](https://dev.meteostat.net/guide.html).
+- Proste zastosowanie modelu na bieżących danych meteorologicznych.
+
+---
+
+## **Kluczowe funkcjonalności**
+
+- **Reprodukcja eksperymentów**: Kod projektu umożliwia odtworzenie eksperymentów przeprowadzonych podczas prac badawczych.  
+- **Wizualizacja prognoz**: Prosta aplikacja Streamlit prezentuje:
+  - Prognozy temperatury.
+  - Przewidywania ciśnienia.
+  - Szacowania opadów.
+
+---
+
+## **Instalacja**
+
+Aby uruchomić projekt lokalnie:
+
+1. Sklonuj repozytorium:
+   ```bash
+   git clone https://gitlab-stud.elka.pw.edu.pl/mostasze/zprp-meteo-model.git
+   cd zprp-meteo-model
+   ```
+
+2. Utwórz i aktywuj środowisko wirtualne
+    ```bash
+    make create_environment
+    ```
+
+3. Zainstaluj zależności:
+    ```bash
+    make requirements
+    ```
+
+---
+
+## **Sposób użycia**
+
+1. Przygotowanie danych:
+    ```bash 
+    make prepare_data
+    ```
+
+2. Uruchomienie eksperymentów:
+    ```bash
+    make run_experiments
+    ```
+
+---
+
+## Organizacja projektu
 
 ```
 ├── LICENSE            <- Open-source license if one is chosen
@@ -56,6 +117,27 @@ A short description of the project.
     │
     └── plots.py                <- Code to create visualizations
 ```
+
+---
+
+## **Autorzy**
+
+- Michał Sadowski
+- Mateusz Ostaszewski
+- Szymon Łukawski
+
+---
+
+## **Licencja**
+
+Projekt jest objęty licencją MIT. Szczegóły można znaleźć w pliku [LICENSE](LICENSE). 
+
+---
+
+## **Dodatkowa dokumentacja**
+
+Szczegółowe informacje o projekcie znajdują się w dodatkowych plikach:  
+- [Design Proposal](docs/DesignProposal.md)
 
 --------
 
