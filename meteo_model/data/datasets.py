@@ -3,6 +3,7 @@ from torch.utils.data import Dataset
 import pandas as pd
 from pathlib import Path
 from collections import defaultdict
+from typing import Dict
 
 from meteo_model.data.config import LOCATIONS_NAMES, DATASET_START_YEAR, DATASET_END_YEAR
 
@@ -46,11 +47,11 @@ class MeteoDataset(Dataset):
         self.end_year = DATASET_END_YEAR
         self.data = self._load_data()
 
-    def _load_data(self) -> dict[dict[pd.DataFrame]]:
+    def _load_data(self) -> Dict[int, Dict[str, pd.DataFrame]]:
         """
         Load data from the specified directory.
         """
-        all_data = defaultdict(dict)
+        all_data: Dict[int, Dict[str, pd.DataFrame]] = defaultdict(dict)
 
         for year in range(self.start_year, self.end_year + 1):
             for loc in self.location:
@@ -102,7 +103,7 @@ class MeteoDataset(Dataset):
         return sequence
 
     def _get_target_sequence(self, year: int, day: int) -> list[list[list[float]]]:
-        start_day = day - self.input_len + self.output_len
+        start_day = day 
         end_day = day + self.output_len
         return self._get_sequence(year, start_day, end_day, [self.target_location])
 

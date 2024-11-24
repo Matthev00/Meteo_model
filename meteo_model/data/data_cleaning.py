@@ -14,7 +14,7 @@ def get_raw_data(
     station: str,
     data_dir: Path = Path("data/raw/weather_data"),
     year_range: tuple[int, int] = (2012, 2024),
-) -> list[pd.DataFrame]:
+) -> tuple[list[pd.DataFrame], list[Path]]:
     """
     Load data from csv files and return a list of dataframes.
     """

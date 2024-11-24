@@ -3,17 +3,17 @@
 import json
 import numpy as np
 from pathlib import Path
-from config import PATH_TO_STATS, PATHS_TO_DATA_FILES_STR
-from get_stats import create_stat_file
+from meteo_model.data.config import PATH_TO_STATS, PATHS_TO_DATA_FILES_STR
+from meteo_model.data.get_stats import create_stat_file
 import pandas as pd
+from typing import Dict, Any
 
-StatType = dict[dict[str, float]]
+StatType = Dict[str, Any]
 
 
 def _normalise_norm_like(array: pd.Series, attr_name: str, stats: StatType):
-    mean = stats[attr_name]["mean"]
-    std = stats[attr_name]["std"]
-    return (array - mean) / std
+    attr_stats = stats[attr_name]
+    return (array - attr_stats["mean"]) / attr_stats["std"]
 
 
 def _normalise_prcp(array: pd.Series):
@@ -48,11 +48,8 @@ def _inverse_snow(array: pd.Series, stats: StatType):
 
 
 def _inverse_wdir(array_sin: pd.Series, array_cos: pd.Series):
-    angle_rad = np.arctan2(array_sin, array_cos)
-    angle_deg = np.rad2deg(angle_rad)
-    if angle_deg < 0:
-        angle_deg += 360
-    return angle_deg
+    angle_deg = np.rad2deg(np.arctan2(array_sin, array_cos))
+    return angle_deg if angle_deg < 0 else angle_deg + 360
 
 
 def normalize_data(df: pd.DataFrame, stats: StatType):
@@ -81,7 +78,7 @@ def inverse_normalize_data(df: pd.DataFrame, stats: StatType):
 
 
 if __name__ == "__main__":
-    from get_stats import get_dataframe
+    from meteo_model.data.get_stats import get_dataframe
     import matplotlib.pyplot as plt
     from glob import glob
 
@@ -99,7 +96,7 @@ if __name__ == "__main__":
     variables = normalised.columns
 
     for i, var in enumerate(variables, 1):
-        plt.subplot(5, 2, i)  # 5 rows, 2 columns grid
+        plt.subplot(5, 2, i)
         plt.hist(normalised.dropna(subset=[var])[var], bins=100, color="blue")
         plt.title(var)
         plt.xlabel("Value")

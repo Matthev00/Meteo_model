@@ -32,7 +32,7 @@ def create_dataloaders(
 
 
 if __name__ == "__main__":
-    num_workers = os.cpu_count()
+    num_workers = os.cpu_count() or 1
     train_dl, test_dl = create_dataloaders(
         root_dir=Path("data/processed/weather_data"),
         location=["BIALYSTOK", "WARSAW", "WROCLAW", "KRAKOW", "POZNAN"],

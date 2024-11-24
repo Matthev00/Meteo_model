@@ -13,10 +13,11 @@ def train(
     loss_fn: torch.nn.Module,
     epochs: int,
     device="cuda",
-    enable_logging=True, 
+    enable_logging=True,
+    experiment_name="MeteoModelForecasting", 
 ) -> dict[str, list[float]]:
 
-    results = {
+    results: dict[str, list[float]] = {
         "Train_MSE": [],
         "Test_MSE": [],
         "Train_MAE": [],
@@ -64,7 +65,7 @@ def train_step(
         optimizer.step()
         total_loss += loss.item()
         total_mae += torch.abs(outputs - targets).sum().item()
-        total_samples += len(inputs)
+        total_samples += targets.size(0) * targets.size(2)
     mse = total_loss / total_samples
     mae = total_mae / total_samples
     rmse = math.sqrt(mse)
@@ -88,7 +89,7 @@ def test_step(
             loss = loss_fn(outputs, targets)
             total_loss += loss.item()
             total_mae += torch.abs(outputs - targets).sum().item()
-            total_samples += len(inputs)
+            total_samples += targets.size(0) * targets.size(2)
     mse = total_loss / total_samples
     mae = total_mae / total_samples
     rmse = math.sqrt(mse)

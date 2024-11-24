@@ -1,14 +1,11 @@
-import os
 import glob
 import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-import json
 from pathlib import Path
-from config import PATH_TO_STATS, PATHS_TO_DATA_FILES_STR
+from meteo_model.data.config import PATH_TO_STATS, PATHS_TO_DATA_FILES_STR
+from typing import Sequence
 
 
-def get_dataframe(paths : list[str | Path]) -> pd.DataFrame:
+def get_dataframe(paths : Sequence[str | Path]) -> pd.DataFrame:
     dataframes = [pd.read_csv(file_name) for file_name in paths]
     return pd.concat(dataframes)
 
