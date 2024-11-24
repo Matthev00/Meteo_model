@@ -1,6 +1,11 @@
+import os
+import json
 import pandas as pd
 from pathlib import Path
 
+from meteo_model.data.get_stats import create_stat_file
+from meteo_model.data.normaliser import normalize_data
+from meteo_model.data.config import PATH_TO_STATS
 from meteo_model.utils.file_utils import get_station_name_from_city_name
 from meteo_model.data.data_cleaner import DataCleaner
 
@@ -44,9 +49,40 @@ def clean_and_save_data(city_name: str):
     cleaner.save_data()
     yield f"{city_name}: Data saved."
 
+def prepocessing(cities: list[str]):
+    clean_data_for_(cities)
+    normalize_cleaned_data_for_(cities)
 
-def main():
-    cities = ["Bialystok", "Warszawa", "Wroclaw", "Krakow", "Poznan"]
+
+def normalize_cleaned_data_station(station, stats, data_dir: Path = Path("data/processed"),
+    year_range: tuple[int, int] = (2012, 2024)):
+    for year in range(year_range[0], year_range[1] + 1):
+        input_file_path = data_dir / "weather_data" / str(year) / f"{station}_weather_data.csv"
+        norm_year_data_dir = data_dir / "normalized" / str(year)
+        if not os.path.exists(norm_year_data_dir):
+            os.makedirs(norm_year_data_dir)
+        output_file_path =  norm_year_data_dir/ f"{station}_normalized_data.csv"
+        if input_file_path.exists():
+            cleaned_df = pd.read_csv(input_file_path)
+            normalized_df = normalize_data(cleaned_df, stats)
+            normalized_df.to_csv(output_file_path, index=False)
+            
+
+def normalize_cleaned_data_for_(cities: list[str], data_dir: Path = Path("data/processed"),
+    year_range: tuple[int, int] = (2012, 2024)):
+    norm_data_dir = data_dir / "normalized"
+    if not os.path.exists(norm_data_dir):
+        os.makedirs(norm_data_dir)
+    if not Path(PATH_TO_STATS).exists():
+        create_stat_file()
+    with open(PATH_TO_STATS) as f:
+        stats = json.load(f)
+    for station in cities:
+        normalize_cleaned_data_station(station, stats, data_dir, year_range)
+
+
+
+def clean_data_for_(cities : list[str]):
     for city in cities:
         for message in clean_and_save_data(city):
             print(message)
@@ -54,4 +90,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    cities = ["Bialystok", "Warszawa", "Wroclaw", "Krakow", "Poznan"]
+    prepocessing(cities)
