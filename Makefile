@@ -18,8 +18,6 @@ requirements:
 	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
 	
 
-
-
 ## Delete all compiled Python files
 .PHONY: clean
 clean:
@@ -55,6 +53,11 @@ create_environment:
 	$(PYTHON_INTERPRETER) -m venv .venv
 	@echo "Run 'source .venv/bin/activate' to activate the environment"
 
+
+## Run experiments
+.PHONY: run_experiments
+run_experiments:
+	$(PYTHON_INTERPRETER) meteo_model/training/perform_experiments.py
 
 
 #################################################################################

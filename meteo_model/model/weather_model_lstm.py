@@ -22,6 +22,9 @@ class WeatherModelLSTM(BaseWeatherModel):
             hidden_size (int): The number of features in the hidden state of the LSTM.
             num_layers (int): The number of layers in the LSTM.
         """
+        self.hidden_size = hidden_size
+        self.num_layers = num_layers
+
         super(WeatherModelLSTM, self).__init__(num_features, num_locations, output_len)
         self.submodels = nn.ModuleList(
             [
@@ -54,6 +57,8 @@ class WeatherModelLSTM(BaseWeatherModel):
         Iteratively predicts output_len steps for the given input data.
         """
         predictions: list[torch.Tensor] = []
+        if X.dim() == 3:
+            X = X.unsqueeze(0)
 
         for _ in range(self.output_len):
             yhat = self.process_locations(X)
