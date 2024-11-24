@@ -4,6 +4,7 @@ import optuna
 from meteo_model.training.engine import train
 from meteo_model.data.data_loader import create_dataloaders
 from meteo_model.model.weather_model_lstm import WeatherModelLSTM
+from meteo_model.training.config import OPTUNA_STORAGE_PATH
 
 
 def objective(trial):
@@ -55,8 +56,13 @@ def objective(trial):
 
 
 def main():
-    study = optuna.create_study(direction="minimize")
-    study.optimize(objective, n_trials=10)
+    study = optuna.create_study(
+        study_name="weather_model_lstm",
+        direction="minimize",
+        storage=OPTUNA_STORAGE_PATH,
+        load_if_exists=True,
+    )
+    study.optimize(objective, n_trials=1)
 
     print("Best trial:")
     print(f"  Value: {study.best_trial.value}")

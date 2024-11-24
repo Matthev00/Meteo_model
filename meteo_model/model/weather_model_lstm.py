@@ -54,6 +54,8 @@ class WeatherModelLSTM(BaseWeatherModel):
         Iteratively predicts output_len steps for the given input data.
         """
         predictions = []
+        if X.dim() == 3:
+            X = X.unsqueeze(0)
 
         for _ in range(self.output_len):
             yhat = self.process_locations(X)
