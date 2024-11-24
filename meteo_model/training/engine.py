@@ -14,7 +14,7 @@ def train(
     epochs: int,
     device="cuda",
     enable_logging=True,
-    experiment_name="MeteoModelForecasting", 
+    experiment_name="MeteoModelForecasting",
 ) -> dict[str, list[float]]:
 
     results: dict[str, list[float]] = {
