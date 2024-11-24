@@ -46,7 +46,7 @@ format:
 .PHONY: prepare_data
 prepare_data:
 	$(PYTHON_INTERPRETER) meteo_model/data/prepare_weather_data.py
-	$(PYTHON_INTERPRETER) meteo_model/data/data_cleaning.py
+	$(PYTHON_INTERPRETER) meteo_model/data/preprocess_data.py
 
 
 ## Set up python interpreter environment
