@@ -137,7 +137,8 @@ Projekt jest objęty licencją MIT. Szczegóły można znaleźć w pliku [LICENS
 ## **Dodatkowa dokumentacja**
 
 Szczegółowe informacje o projekcie znajdują się w dodatkowych plikach:  
-- [Design Proposal](docs/DesignProposal.md)
+- [Design Proposal](docs/Design_Proposal.md)
+- [Analiza literatury](docs/Analiza_Literatury.md)
 
 --------
 
