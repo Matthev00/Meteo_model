@@ -8,16 +8,17 @@ from meteo_model.training.config import OPTUNA_STORAGE_PATH
 
 
 def objective(trial):
-    batch_size = trial.suggest_int("batch_size", 4, 32)
+    batch_size = trial.suggest_int("batch_size", 2, 32, step=2)
     lr = trial.suggest_loguniform("lr", 1e-5, 1e-1)
     epochs = trial.suggest_int("epochs", 5, 50)
+    num_layers = trial.suggest_int("num_layers", 1, 8)
     hidden_size = trial.suggest_int("hidden_size", 16, 256)
-    num_layers = trial.suggest_int("num_layers", 2, 4)
-    input_len = trial.suggest_int("input_len", 4, 14)
-    output_len = trial.suggest_int("output_len", 1, 7)
-
+    input_len = trial.suggest_int("input_len", 4, 32)
+    location = trial.suggest_categorical(
+        "location", [["BIALYSTOK", "WARSAW", "WROCLAW", "KRAKOW", "POZNAN"], ["WARSAW"]]
+    )
+    output_len = 8
     split_ratio = 0.8
-    location = ["BIALYSTOK", "WARSAW", "WROCLAW", "KRAKOW", "POZNAN"]
     device = "cuda" if torch.cuda.is_available() else "cpu"
     num_features = 8
 
@@ -50,6 +51,7 @@ def objective(trial):
         epochs=epochs,
         device=device,
         enable_logging=True,
+        experiment_name="LSTM_first_training",
     )
 
     return results["Test_MSE"][-1]

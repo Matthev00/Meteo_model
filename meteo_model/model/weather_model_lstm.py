@@ -22,6 +22,9 @@ class WeatherModelLSTM(BaseWeatherModel):
             hidden_size (int): The number of features in the hidden state of the LSTM.
             num_layers (int): The number of layers in the LSTM.
         """
+        self.hidden_size = hidden_size
+        self.num_layers = num_layers
+
         super(WeatherModelLSTM, self).__init__(num_features, num_locations, output_len)
         self.submodels = nn.ModuleList(
             [
