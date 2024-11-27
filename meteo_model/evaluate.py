@@ -4,27 +4,32 @@ from meteo_model.data.data_loader import create_dataloaders
 from pathlib import Path
 import os
 import torch
+from meteo_model.data.normaliser import inverse_normalize_data
+import pandas as pd
+import json
+from meteo_model.data.config import PATH_TO_STATS
 
 
 def main():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     num_workers = os.cpu_count() or 1
-    feature_names = [
-        "Avg Temperature",
-        "Min Temperature",
-        "Max Temperature",
-        "Percepitation",
-        "Snow",
-        "Wind Direction",
-        "Wind Speed",
-        "Pressure",
+    features_names = [
+        "tavg",
+        "tmin",
+        "tmax",
+        "prcp",
+        "snow",
+        "sin_wdir",
+        "cos_wdir",
+        "wspd",
+        "pres",
     ]
 
     _, test_dl = create_dataloaders(
-        root_dir=Path("data/processed/weather_data"),
-        location=["BIALYSTOK", "WARSAW", "WROCLAW", "KRAKOW", "POZNAN"],
+        root_dir=Path("data/normalized"),
+        location=["WARSAW"],
         input_len=32,
-        output_len=8,
+        output_len=4,
         split_ratio=0.8,
         batch_size=16,
         num_workers=num_workers,
@@ -32,10 +37,34 @@ def main():
 
     sample = next(iter(test_dl))
     X, y = sample
-    model = load_model("Mete-test", 2)
+    X_df = pd.DataFrame(X[0][0], columns=features_names)
+    y_df = pd.DataFrame(y[0][0], columns=features_names)
+
+    model = load_model("Mete-test", 4)
     model.eval()
+
     pred = model(X.to(device))[0].detach().cpu().numpy()
-    visualize_predictions(X[0], y[0], pred, test_dl.dataset.features_names)
+    pred_df = pd.DataFrame(pred[0], columns=features_names)
+
+    with open(PATH_TO_STATS) as f:
+        stats_ = json.load(f)
+
+    X = inverse_normalize_data(X_df, stats_)
+    y = inverse_normalize_data(y_df, stats_)
+    pred = inverse_normalize_data(pred_df, stats_)
+
+    norm_features_names = [
+        "tavg",
+        "tmin",
+        "tmax",
+        "prcp",
+        "snow",
+        "wdir",
+        "wspd",
+        "pres",
+    ]
+
+    visualize_predictions(X, y, pred, norm_features_names)
 
 
 if __name__ == "__main__":
