@@ -1,8 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 
-def visualize_predictions(X, y, pred, features_names: list[str]):
+def visualize_predictions(
+    X: pd.DataFrame, y: pd.DataFrame, pred: pd.DataFrame, features_names: list[str]
+) -> None:
 
     input_len = X.shape[0]
     output_len = y.shape[0]

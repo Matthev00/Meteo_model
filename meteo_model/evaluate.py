@@ -10,9 +10,9 @@ import json
 from meteo_model.data.config import PATH_TO_STATS
 
 
-def main():
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    num_workers = os.cpu_count() or 1
+def prepare_df(
+    X: torch.Tensor, y: torch.Tensor, pred: torch.Tensor
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     features_names = [
         "tavg",
         "tmin",
@@ -24,6 +24,23 @@ def main():
         "wspd",
         "pres",
     ]
+    with open(PATH_TO_STATS) as f:
+        stats_ = json.load(f)
+
+    X_df = pd.DataFrame(X[0][0], columns=features_names)
+    y_df = pd.DataFrame(y[0][0], columns=features_names)
+    pred_df = pd.DataFrame(pred[0], columns=features_names)
+
+    X_df = inverse_normalize_data(X_df, stats_)
+    y_df = inverse_normalize_data(y_df, stats_)
+    pred_df = inverse_normalize_data(pred_df, stats_)
+
+    return X_df, y_df, pred_df
+
+
+def main():
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    num_workers = os.cpu_count() or 1
 
     _, test_dl = create_dataloaders(
         root_dir=Path("data/normalized"),
@@ -34,26 +51,14 @@ def main():
         batch_size=16,
         num_workers=num_workers,
     )
-
-    sample = next(iter(test_dl))
-    X, y = sample
-    X_df = pd.DataFrame(X[0][0], columns=features_names)
-    y_df = pd.DataFrame(y[0][0], columns=features_names)
+    X, y = next(iter(test_dl))
 
     model = load_model("Mete-test", 4)
     model.eval()
 
     pred = model(X.to(device))[0].detach().cpu().numpy()
-    pred_df = pd.DataFrame(pred[0], columns=features_names)
 
-    with open(PATH_TO_STATS) as f:
-        stats_ = json.load(f)
-
-    X = inverse_normalize_data(X_df, stats_)
-    y = inverse_normalize_data(y_df, stats_)
-    pred = inverse_normalize_data(pred_df, stats_)
-
-    norm_features_names = [
+    inorm_features_names = [
         "tavg",
         "tmin",
         "tmax",
@@ -64,7 +69,7 @@ def main():
         "pres",
     ]
 
-    visualize_predictions(X, y, pred, norm_features_names)
+    visualize_predictions(*prepare_df(X, y, pred), inorm_features_names)
 
 
 if __name__ == "__main__":
