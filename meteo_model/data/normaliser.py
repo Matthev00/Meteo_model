@@ -49,7 +49,7 @@ def _inverse_snow(array: pd.Series, stats: StatType):
 
 def _inverse_wdir(array_sin: pd.Series, array_cos: pd.Series):
     angle_deg = np.rad2deg(np.arctan2(array_sin, array_cos))
-    return angle_deg if angle_deg < 0 else angle_deg + 360
+    return angle_deg % 360
 
 
 def normalize_data(df: pd.DataFrame, stats: StatType):
