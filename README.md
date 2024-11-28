@@ -55,12 +55,17 @@ Aby uruchomić projekt lokalnie:
 
 ## **Sposób użycia**
 
-1. Przygotowanie danych:
+1. Przgotowanie klucza do Meteostat API
+   - Należy zasubskrybować jeden z [planów meteostat](https://rapidapi.com/meteostat/api/meteostat/pricing)
+   - Następnie należy wejść na [RapidApi meteostat](https://rapidapi.com/meteostat/api/meteostat/playground/) i skopiować **x-rapidapi-key**
+   - Skopiowany klucz należy wkleić do pliku .env w katalogu głównym projektu.
+
+2. Przygotowanie danych:
     ```bash 
     make prepare_data
     ```
 
-2. Uruchomienie eksperymentów:
+3. Uruchomienie eksperymentów:
     ```bash
     make run_experiments
     ```

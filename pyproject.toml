@@ -26,6 +26,7 @@ dependencies = [
     "notebook>=7.2.2",
     "optuna>=4.1.0",
     "pandas>=2.2.3",
+    "python-dotenv>=1.0.1",
     "pytorch-tcn>=1.2.1",
     "scipy>=1.14.1",
     "seaborn>=0.13.2",
