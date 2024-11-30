@@ -1,8 +1,10 @@
 import mlflow
 from mlflow.models.signature import infer_signature
 from functools import wraps
+import argparse
 from meteo_model.model.weather_model_lstm import WeatherModelLSTM
 from meteo_model.model.weather_model_tcn import WeatherModelTCN
+from meteo_model.data.config import LOCATIONS_NAMES
 
 
 def mlflow_logging(func):
@@ -53,3 +55,54 @@ def mlflow_logging(func):
         return results
 
     return wrapper
+
+
+def str2bool(v):
+    if isinstance(v, bool):
+        return v
+    if v.lower() in ("yes", "true", "t", "y", "1"):
+        return True
+    elif v.lower() in ("no", "false", "f", "n", "0"):
+        return False
+    else:
+        raise argparse.ArgumentTypeError("Boolean value expected.")
+
+
+def parse_arguments() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Script train METEO MODEL.")
+
+    parser.add_argument(
+        "--n_locations", type=int, default=1, help="Number of locations to train the model"
+    )
+    parser.add_argument("--input_len", type=int, default=32, help="Number of input time steps")
+    parser.add_argument("--output_len", type=int, default=4, help="Number of output time steps")
+    parser.add_argument(
+        "--batch_size", type=int, default=16, help="Batch size for training and testing"
+    )
+
+    parser.add_argument(
+        "--model_type", type=str, default="lstm", help="Type of model to train (lstm or tcn)"
+    )
+    parser.add_argument(
+        "--hidden_size", type=int, default=128, help="Hidden size for the LSTM model"
+    )
+    parser.add_argument(
+        "--num_layers", type=int, default=2, help="Number of layers for the LSTM model"
+    )
+
+    parser.add_argument("--lr", type=float, default=0.001, help="Learning rate for the optimizer")
+    parser.add_argument("--epochs", type=int, default=5, help="Number of epochs for training")
+    parser.add_argument(
+        "--enable_logging", type=str2bool, default=True, help="Enable logging with MLFlow"
+    )
+    parser.add_argument(
+        "--experiment_name",
+        type=str,
+        default="Default_experiment",
+        help="Name of the MLFlow experiment",
+    )
+
+    args = parser.parse_args()
+
+    args.location = LOCATIONS_NAMES[: args.n_locations]
+    return args
