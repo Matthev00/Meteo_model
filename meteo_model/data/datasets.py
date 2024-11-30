@@ -3,7 +3,7 @@ from torch.utils.data import Dataset
 import pandas as pd
 from pathlib import Path
 from collections import defaultdict
-from typing import Dict
+from typing import Dict, Optional
 
 from meteo_model.data.config import LOCATIONS_NAMES, DATASET_START_YEAR, DATASET_END_YEAR
 
@@ -12,7 +12,7 @@ class MeteoDataset(Dataset):
     def __init__(
         self,
         root_dir: Path = Path("data/processed/weather_data"),
-        location: list[str] = None,
+        location: Optional[list[str]] = None,
         target_location: str = LOCATIONS_NAMES[0],
         input_len: int = 32,
         output_len: int = 8,

@@ -2,11 +2,12 @@ from torch.utils.data import DataLoader, Subset
 from pathlib import Path
 from meteo_model.data.datasets import MeteoDataset
 import os
+from typing import Optional
 
 
 def create_dataloaders(
     root_dir: Path = Path("data/processed/weather_data"),
-    location=None,
+    location: Optional[list[str]] = None,
     input_len: int = 32,
     output_len: int = 8,
     split_ratio: float = 0.8,

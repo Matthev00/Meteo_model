@@ -54,7 +54,7 @@ def train_step(
 ) -> tuple[float, float, float]:
     model.train()
     total_loss = 0
-    total_mae = 0
+    total_mae = 0.0
     total_samples = 0
     for batch, (inputs, targets) in enumerate(train_dataloader):
         inputs, targets = inputs.to(device), targets.to(device)
@@ -80,7 +80,7 @@ def test_step(
 ) -> tuple[float, float, float]:
     model.eval()
     total_loss = 0
-    total_mae = 0
+    total_mae = 0.0
     total_samples = 0
     with torch.inference_mode():
         for batch, (inputs, targets) in enumerate(test_dataloader):

@@ -8,6 +8,8 @@ from meteo_model.data.config import LOCATIONS, API_URL
 def get_request_headers() -> dict[str, str]:
     load_env()
     API_KEY = os.getenv("RAPIDAPI_KEY")
+    if not API_KEY:
+        raise ValueError("API key not found in environment variables.")
     return {"x-rapidapi-key": API_KEY, "x-rapidapi-host": "meteostat.p.rapidapi.com"}
 
 
@@ -17,8 +19,8 @@ def fetch_weather_data(location: str, start_date: str, end_date: str) -> list:
         return []
 
     querystring = {
-        "lat": LOCATIONS[location][0],
-        "lon": LOCATIONS[location][1],
+        "lat": str(LOCATIONS[location][0]),
+        "lon": str(LOCATIONS[location][1]),
         "start": start_date,
         "end": end_date,
     }
