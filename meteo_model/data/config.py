@@ -18,3 +18,6 @@ PATHS_TO_DATA_FILES_STR = "data/processed/weather_data/*/*.csv"
 PATH_TO_STATS = "data/stats.json"
 
 API_URL = "https://meteostat.p.rapidapi.com/point/daily"
+
+COLUMNS = ["tavg", "tmin", "tmax", "prcp", "snow", "wdir", "wspd", "pres"]
+NORM_COLUMNS = ["tavg", "tmin", "tmax", "prcp", "snow", "sin_wdir", "cos_wdir", "wspd", "pres"]

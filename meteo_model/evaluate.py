@@ -7,29 +7,18 @@ import torch
 from meteo_model.data.normaliser import inverse_normalize_data
 import pandas as pd
 import json
-from meteo_model.data.config import PATH_TO_STATS
+from meteo_model.data.config import PATH_TO_STATS, NORM_COLUMNS, COLUMNS
 
 
 def prepare_df(
     X: torch.Tensor, y: torch.Tensor, pred: torch.Tensor
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    features_names = [
-        "tavg",
-        "tmin",
-        "tmax",
-        "prcp",
-        "snow",
-        "sin_wdir",
-        "cos_wdir",
-        "wspd",
-        "pres",
-    ]
     with open(PATH_TO_STATS) as f:
         stats_ = json.load(f)
 
-    X_df = pd.DataFrame(X[0][0], columns=features_names)
-    y_df = pd.DataFrame(y[0][0], columns=features_names)
-    pred_df = pd.DataFrame(pred[0], columns=features_names)
+    X_df = pd.DataFrame(X[0][0], columns=NORM_COLUMNS)
+    y_df = pd.DataFrame(y[0][0], columns=NORM_COLUMNS)
+    pred_df = pd.DataFrame(pred[0], columns=NORM_COLUMNS)
 
     X_df = inverse_normalize_data(X_df, stats_)
     y_df = inverse_normalize_data(y_df, stats_)
@@ -55,21 +44,10 @@ def main():
 
     model = load_model("Mete-test", 4)
     model.eval()
+    with torch.inference_mode():
+        pred = model(X.to(device))[0].detach().cpu().numpy()
 
-    pred = model(X.to(device))[0].detach().cpu().numpy()
-
-    inorm_features_names = [
-        "tavg",
-        "tmin",
-        "tmax",
-        "prcp",
-        "snow",
-        "wdir",
-        "wspd",
-        "pres",
-    ]
-
-    visualize_predictions(*prepare_df(X, y, pred), inorm_features_names)
+    visualize_predictions(*prepare_df(X, y, pred), COLUMNS)
 
 
 if __name__ == "__main__":
