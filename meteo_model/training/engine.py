@@ -12,9 +12,9 @@ def train(
     optimizer: torch.optim.Optimizer,
     loss_fn: torch.nn.Module,
     epochs: int,
-    device="cuda",
-    enable_logging=True,
-    experiment_name="MeteoModelForecasting",
+    device: str = "cuda",
+    enable_logging: bool = True,
+    experiment_name: str = "MeteoModelForecasting",
 ) -> dict[str, list[float]]:
 
     results: dict[str, list[float]] = {

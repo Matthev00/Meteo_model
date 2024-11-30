@@ -3,7 +3,7 @@
 import json
 import numpy as np
 from pathlib import Path
-from meteo_model.data.config import PATH_TO_STATS, PATHS_TO_DATA_FILES_STR
+from meteo_model.data.config import PATH_TO_STATS, PATHS_TO_DATA_FILES_STR, COLUMNS, NORM_COLUMNS
 from meteo_model.data.get_stats import create_stat_file
 import pandas as pd
 from typing import Dict, Any
@@ -53,7 +53,7 @@ def _inverse_wdir(array_sin: pd.Series, array_cos: pd.Series):
 
 
 def normalize_data(df: pd.DataFrame, stats: StatType):
-    columns = ["tavg", "tmin", "tmax", "prcp", "snow", "sin_wdir", "cos_wdir", "wspd", "pres"]
+    columns = NORM_COLUMNS
     norm_like_columns = ["tavg", "tmin", "tmax", "wspd", "pres"]
     normalised_df = pd.DataFrame(columns=columns)
     for col in norm_like_columns:
@@ -66,7 +66,7 @@ def normalize_data(df: pd.DataFrame, stats: StatType):
 
 
 def inverse_normalize_data(df: pd.DataFrame, stats: StatType):
-    columns = ["tavg", "tmin", "tmax", "prcp", "snow", "wdir", "wspd", "pres"]
+    columns = COLUMNS
     inv_df = pd.DataFrame(columns=columns)
     norm_like_columns = ["tavg", "tmin", "tmax", "wspd", "pres"]
     for col in norm_like_columns:
