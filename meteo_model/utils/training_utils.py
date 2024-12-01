@@ -1,4 +1,6 @@
+import os
 import mlflow
+import torch
 from mlflow.models.signature import infer_signature
 from functools import wraps
 import argparse
@@ -22,7 +24,7 @@ def mlflow_logging(func):
         device = kwargs.get("device", "cuda")
 
         mlflow.set_experiment(experiment_name)
-        with mlflow.start_run():
+        with mlflow.start_run() as run:
             mlflow.log_param("Learning Rate", optimizer.param_groups[0]["lr"])
             mlflow.log_param("Batch Size", train_dataloader.batch_size)
             mlflow.log_param("Input Length", train_dataloader.dataset.dataset.input_len)
@@ -34,6 +36,9 @@ def mlflow_logging(func):
                 mlflow.log_param("Number of Layers", model.num_layers)
                 mlflow.log_param("Model Type", "LSTM")
             if isinstance(model, WeatherModelTCN):
+                mlflow.log_param("Kernel Size", model.kernel_size)
+                mlflow.log_param("Dropout", model.kernel_size)
+                mlflow.log_param("Number of Channels", model.num_channels)
                 mlflow.log_param("Model Type", "TCN")
 
             results = func(*args, **kwargs)
@@ -49,9 +54,15 @@ def mlflow_logging(func):
             sample_input = train_dataloader.dataset[0][0].numpy()
             sample_output = model(train_dataloader.dataset[0][0].to(device)).detach().cpu().numpy()
 
-            signature = infer_signature(sample_input, sample_output)
-            mlflow.pytorch.log_model(model, "models", signature=signature)
-
+            if isinstance(model, WeatherModelLSTM):
+                signature = infer_signature(sample_input, sample_output)
+                mlflow.pytorch.log_model(model, "models", signature=signature)
+            if isinstance(model, WeatherModelTCN):
+                tcn_model_dir_path = run.info.artifact_uri + "/model_dict"
+                if tcn_model_dir_path.startswith("file://"):
+                    tcn_model_dir_path = tcn_model_dir_path[6:]
+                os.makedirs(tcn_model_dir_path, exist_ok=True)
+                torch.save(model.state_dict(), tcn_model_dir_path + "/model_dict.pth")
         return results
 
     return wrapper
