@@ -25,6 +25,8 @@ class WeatherModelTCN(BaseWeatherModel):
             dropout (float): Dropout rate for regularization.
         """
         self.num_channels = num_channels
+        self.kernel_size = kernel_size
+        self.dropout = dropout
         super(WeatherModelTCN, self).__init__(num_features, num_locations, output_len)
 
         self.submodels = nn.ModuleList(
