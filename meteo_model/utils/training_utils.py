@@ -37,7 +37,7 @@ def mlflow_logging(func):
                 mlflow.log_param("Model Type", "LSTM")
             if isinstance(model, WeatherModelTCN):
                 mlflow.log_param("Kernel Size", model.kernel_size)
-                mlflow.log_param("Dropout", model.kernel_size)
+                mlflow.log_param("Dropout", model.dropout)
                 mlflow.log_param("Number of Channels", model.num_channels)
                 mlflow.log_param("Model Type", "TCN")
 
