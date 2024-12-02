@@ -6,7 +6,7 @@ from typing import Optional
 
 
 def create_dataloaders(
-    root_dir: Path = Path("data/processed/weather_data"),
+    root_dir: Path = Path("data/normalized"),
     location: Optional[list[str]] = None,
     input_len: int = 32,
     output_len: int = 8,

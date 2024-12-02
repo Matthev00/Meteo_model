@@ -63,21 +63,22 @@ def objective_tcn(trial):
     lr = trial.suggest_loguniform("lr", 1e-5, 1e-1)
     epochs = trial.suggest_int("epochs", 5, 50)
 
-    kernel_size = 2
     dropout = trial.suggest_loguniform("lr", 1e-4, 2e-1)
     input_len = trial.suggest_int("input_len", 4, 32)
+    kernel_size = trial.suggest_int("kernel_size", 2, input_len)
     location = trial.suggest_categorical(
         "location", [["BIALYSTOK", "WARSAW", "WROCLAW", "KRAKOW", "POZNAN"], ["WARSAW"]]
     )
-    output_len = 8
+    output_len = 4
     split_ratio = 0.8
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    num_features = 8
+    num_features = 9
 
     num_channels = trial.suggest_categorical("num_channels", [[4, 2, 1, 2, 4], [5, 5], [8]])
     num_channels.append(num_features)
 
     train_loader, test_loader = create_dataloaders(
+        
         location=location,
         input_len=input_len,
         output_len=output_len,
@@ -128,7 +129,7 @@ def create_study_for_(objective, name):
 
 
 def main():
-    create_study_for_(objective_lstm, "weather_model_LSTM")
+    # create_study_for_(objective_lstm, "weather_model_LSTM")
     create_study_for_(objective_tcn, "weather_model_TCN")
 
 
