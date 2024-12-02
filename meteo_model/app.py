@@ -5,7 +5,7 @@ from meteo_model.data.config import COLUMNS
 from meteo_model.utils.app_utils import predict, get_dates
 
 
-def visualize_predictions(preds: pd.Dataframe, selected_parameters: list[str], days_forward: int):
+def visualize_predictions(preds: pd.DataFrame, selected_parameters: list[str], days_forward: int):
     st.subheader("Visualization")
 
     num_columns = 2
