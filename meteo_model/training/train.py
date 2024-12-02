@@ -1,6 +1,7 @@
 from meteo_model.data.data_loader import create_dataloaders
 from meteo_model.training.engine import train
 from meteo_model.model.weather_model_lstm import WeatherModelLSTM
+from meteo_model.model.weather_model_tcn import WeatherModelTCN
 from meteo_model.utils.training_utils import parse_arguments
 import torch
 from pathlib import Path
@@ -29,6 +30,15 @@ def main():
             output_len=args.output_len,
             hidden_size=args.hidden_size,
             num_layers=args.num_layers,
+        ).to(device)
+    if args.model_type == "tcn":
+        model = WeatherModelTCN(
+            num_features=9,
+            num_locations=args.n_locations,
+            output_len=args.output_len,
+            num_channels=args.num_channels,
+            kernel_size=args.kernel_size,
+            dropout=args.dropout,
         ).to(device)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
