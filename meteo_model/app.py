@@ -1,11 +1,11 @@
 import streamlit as st
-import matplotlib.pyplot as plt
+import pandas as pd
 import plotly.express as px
 from meteo_model.data.config import COLUMNS
 from meteo_model.utils.app_utils import predict, get_dates
 
 
-def visualize_predictions(preds, selected_parameters, days_forward):
+def visualize_predictions(preds: pd.Dataframe, selected_parameters: list[str], days_forward: int):
     st.subheader("Visualization")
 
     num_columns = 2
@@ -22,7 +22,7 @@ def visualize_predictions(preds, selected_parameters, days_forward):
             st.plotly_chart(fig)
 
 
-def user_input_features():
+def user_input_features() -> tuple[list[str], int]:
     st.sidebar.title("Vizualization settings")
     parameters = COLUMNS
     selected_parameters = st.sidebar.multiselect(
@@ -30,7 +30,7 @@ def user_input_features():
     )
     if not selected_parameters:
         st.warning("Please select at least one parameter to visualize.")
-        return
+        return [], 0
     days_forward = st.sidebar.slider("Number of time steps to predict: ", 1, 4, 4)
 
     return selected_parameters, days_forward
