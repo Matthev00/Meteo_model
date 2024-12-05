@@ -9,18 +9,22 @@ from meteo_model.training.config import OPTUNA_STORAGE_PATH
 
 def objective(trial):
     batch_size = trial.suggest_int("batch_size", 2, 32, step=2)
-    lr = trial.suggest_loguniform("lr", 1e-5, 1e-1)
-    epochs = trial.suggest_int("epochs", 5, 50)
+    lr = trial.suggest_float("lr", 1e-5, 1e-1, log=True)
+    epochs = trial.suggest_int("epochs", 5, 30)
     num_layers = trial.suggest_int("num_layers", 1, 8)
     hidden_size = trial.suggest_int("hidden_size", 16, 256)
-    input_len = trial.suggest_int("input_len", 4, 32)
+    input_len = trial.suggest_int("input_len", 4, 14)
     location = trial.suggest_categorical(
-        "location", [["BIALYSTOK", "WARSAW", "WROCLAW", "KRAKOW", "POZNAN"], ["WARSAW"]]
+        "location", (
+            "BIALYSTOK, WARSAW, WROCLAW, KRAKOW, POZNAN",
+            "WARSAW"
+        )
     )
     output_len = 8
     split_ratio = 0.8
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    num_features = 8
+    num_features = 9
+    location = location.split(", ")
 
     train_loader, test_loader = create_dataloaders(
         location=location,
