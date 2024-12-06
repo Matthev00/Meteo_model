@@ -15,6 +15,7 @@ def train(
     device: str = "cuda",
     enable_logging: bool = True,
     experiment_name: str = "MeteoModelForecasting",
+    scheduler: torch.optim.lr_scheduler = None,
 ) -> dict[str, list[float]]:
 
     results: dict[str, list[float]] = {
@@ -42,6 +43,10 @@ def train(
         results["Test_MAE"].append(test_mae)
         results["Train_RMSE"].append(train_rmse)
         results["Test_RMSE"].append(test_rmse)
+
+        if scheduler:
+            scheduler.step(test_mse)
+
     return results
 
 
