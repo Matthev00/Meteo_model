@@ -62,3 +62,6 @@ Dotrenowalismy oba modele korzystając z dynamicznego lr i uzyskaliśmy polepsze
 Dotrenowany model uznany zostaje za najlepszy LSTM dla przewidywań 8-dniowych
 ![alt text](image-6.png)
 ![alt text](image-7.png)
+
+
+## W celu jeszcze lepszego wyniku rzeczywistego osobno wytrenowaliśmy modelele dla każdej dlugości przewidywań 1-8. Jest to powtorzenie tych samych eksperymentow dla różnego input len.
