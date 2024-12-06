@@ -26,6 +26,7 @@ dependencies = [
     "notebook>=7.2.2",
     "optuna>=4.1.0",
     "pandas>=2.2.3",
+    "plotly>=5.24.1",
     "python-dotenv>=1.0.1",
     "pytorch-tcn>=1.2.1",
     "scipy>=1.14.1",
@@ -53,5 +54,6 @@ dev = [
     "black>=24.10.0",
     "flake8>=7.1.1",
     "mypy>=1.13.0",
+    "optuna-dashboard>=0.17.0",
     "types-requests>=2.32.0.20241016",
 ]
