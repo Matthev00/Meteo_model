@@ -22,8 +22,18 @@ def predict(n_days: int) -> pd.DataFrame:
     X = get_weather_tensor_for_days(n_days, ["WARSAW"])  # Change location here
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+    model_for_days = {
+        1: ("Mete-test", 4),
+        2: ("Mete-test", 4),
+        3: ("Mete-test", 4),
+        4: ("Mete-test", 4),
+        # 5: ("Mete-test", 4),
+        # 6: ("Mete-test", 4),
+        # 7: ("Mete-test", 4),
+    }
+
     # Select best model model
-    model = load_model("Mete-test", 4)
+    model = load_model(*model_for_days[n_days])
     model.eval()
     with torch.inference_mode():
         pred = model(X.to(device))[0].detach().cpu().numpy()

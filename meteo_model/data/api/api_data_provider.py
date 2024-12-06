@@ -5,6 +5,7 @@ import torch
 
 
 def get_weather_tensor_for_days(days: int, location_names: list[str]) -> torch.Tensor:
+    ### Calkowicie do zastąpienie przez faktyczne dane z api to jest tylko na pokaz że apka działa
     _, test_dl = create_dataloaders(
         root_dir=Path("data/normalized"),
         location=location_names,

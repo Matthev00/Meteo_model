@@ -6,6 +6,17 @@ from meteo_model.utils.app_utils import predict, get_dates
 
 
 def visualize_predictions(preds: pd.DataFrame, selected_parameters: list[str], days_forward: int):
+    param_names = {
+        "tavg": "Average temperature",
+        "tmin": "Minimum temperature",
+        "tmax": "Maximum temperature",
+        "prcp": "Precipitation",
+        "snow": "Snow",
+        "wdir": "Wind direction",
+        "wspd": "Wind speed",
+        "pres": "Pressure",
+    }
+
     st.subheader("Visualization")
 
     num_columns = 2
@@ -15,9 +26,9 @@ def visualize_predictions(preds: pd.DataFrame, selected_parameters: list[str], d
         col = cols[i % num_columns]
         with col:
             if days_forward == 1:
-                fig = px.scatter(preds, x="date", y=param, title=param)
+                fig = px.scatter(preds, x="date", y=param, title=param_names[param])
             else:
-                fig = px.line(preds, x="date", y=param, title=param)
+                fig = px.line(preds, x="date", y=param, title=param_names[param])
             fig.update_layout(xaxis_title="Date (DD-MM)")
             st.plotly_chart(fig)
 
