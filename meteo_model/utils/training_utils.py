@@ -51,19 +51,11 @@ def mlflow_logging(func):
                 mlflow.log_metric("Train_RMSE", results["Train_RMSE"][epoch], step=epoch)
                 mlflow.log_metric("Test_RMSE", results["Test_RMSE"][epoch], step=epoch)
 
-            
+            sample_input = train_dataloader.dataset[0][0].numpy()
+            sample_output = model(train_dataloader.dataset[0][0].to(device)).detach().cpu().numpy()
+            signature = infer_signature(sample_input, sample_output)
+            mlflow.pytorch.log_model(model, "models", signature=signature)
 
-            if isinstance(model, WeatherModelLSTM):
-                sample_input = train_dataloader.dataset[0][0].numpy()
-                sample_output = model(train_dataloader.dataset[0][0].to(device)).detach().cpu().numpy()
-                signature = infer_signature(sample_input, sample_output)
-                mlflow.pytorch.log_model(model, "models", signature=signature)
-            if isinstance(model, WeatherModelTCN):
-                tcn_model_dir_path = run.info.artifact_uri + "/model_dict"
-                if tcn_model_dir_path.startswith("file://"):
-                    tcn_model_dir_path = tcn_model_dir_path[6:]
-                os.makedirs(tcn_model_dir_path, exist_ok=True)
-                torch.save(model.state_dict(), tcn_model_dir_path + "/model_dict.pth")
         return results
 
     return wrapper
@@ -101,16 +93,12 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "--num_layers", type=int, default=2, help="Number of layers for the LSTM model"
     )
-    parser.add_argument(
-        "--kernel_size", type=int, default=2, help="Kernel size of TCN"
-    )
-    parser.add_argument(
-        "--dropout", type=int, default=0.1, help="Dropout for TCN"
-    )
+    parser.add_argument("--kernel_size", type=int, default=2, help="Kernel size of TCN")
+    parser.add_argument("--dropout", type=int, default=0.1, help="Dropout for TCN")
     parser.add_argument(
         "--num_channels",
         type=int,
-        nargs="+",  
+        nargs="+",
         help="Number of output channels in TCN. It also determines the number of layers of that TCN",
     )
 
