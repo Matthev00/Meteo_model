@@ -1,4 +1,6 @@
+import os
 import mlflow
+import torch
 from mlflow.models.signature import infer_signature
 from functools import wraps
 import argparse
@@ -22,7 +24,7 @@ def mlflow_logging(func):
         device = kwargs.get("device", "cuda")
 
         mlflow.set_experiment(experiment_name)
-        with mlflow.start_run():
+        with mlflow.start_run() as run:
             mlflow.log_param("Learning Rate", optimizer.param_groups[0]["lr"])
             mlflow.log_param("Batch Size", train_dataloader.batch_size)
             mlflow.log_param("Input Length", train_dataloader.dataset.dataset.input_len)
@@ -34,6 +36,9 @@ def mlflow_logging(func):
                 mlflow.log_param("Number of Layers", model.num_layers)
                 mlflow.log_param("Model Type", "LSTM")
             if isinstance(model, WeatherModelTCN):
+                mlflow.log_param("Kernel Size", model.kernel_size)
+                mlflow.log_param("Dropout", model.dropout)
+                mlflow.log_param("Number of Channels", model.num_channels)
                 mlflow.log_param("Model Type", "TCN")
 
             results = func(*args, **kwargs)
@@ -48,7 +53,6 @@ def mlflow_logging(func):
 
             sample_input = train_dataloader.dataset[0][0].numpy()
             sample_output = model(train_dataloader.dataset[0][0].to(device)).detach().cpu().numpy()
-
             signature = infer_signature(sample_input, sample_output)
             mlflow.pytorch.log_model(model, "models", signature=signature)
 
@@ -88,6 +92,14 @@ def parse_arguments() -> argparse.Namespace:
     )
     parser.add_argument(
         "--num_layers", type=int, default=2, help="Number of layers for the LSTM model"
+    )
+    parser.add_argument("--kernel_size", type=int, default=2, help="Kernel size of TCN")
+    parser.add_argument("--dropout", type=int, default=0.1, help="Dropout for TCN")
+    parser.add_argument(
+        "--num_channels",
+        type=int,
+        nargs="+",
+        help="Number of output channels in TCN. It also determines the number of layers of that TCN",
     )
 
     parser.add_argument("--lr", type=float, default=0.001, help="Learning rate for the optimizer")
