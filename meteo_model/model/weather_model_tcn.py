@@ -10,7 +10,7 @@ class WeatherModelTCN(BaseWeatherModel):
         num_features: int,
         num_locations: int,
         output_len: int,
-        num_channels: list,
+        num_channels: list[int],
         kernel_size: int,
         dropout: float,
     ):
