@@ -34,20 +34,3 @@ def visualize_predictions(
     plt.tight_layout()
     plt.show()
 
-
-def get_params(path_to_run):
-    params = {}
-    path_to_params = path_to_run + "/params/"
-    params["num_features"] = 8
-    params["output_len"] = 8
-    with open(path_to_params + "Dropout") as dt:
-        params["dropout"] = float(dt.read())
-    with open(path_to_params + "Kernel Size") as ks:
-        params["kernel_size"] = int(ks.read())
-    with open(path_to_params + "Locations_size") as ls:
-        params["num_locations"] = int(ls.read())
-    with open(path_to_params + "Number of Channels") as nc:
-        params["num_channels"] = json.load(nc)
-
-    return params
-
