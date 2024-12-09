@@ -2,7 +2,18 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from meteo_model.data.config import COLUMNS
-from meteo_model.utils.app_utils import predict, get_dates
+import requests
+
+
+API_URL = "http://127.0.0.1:8000/predict"
+
+
+def predict_via_api(n_days: int) -> pd.DataFrame:
+    response = requests.post(API_URL, json={"n_days": n_days})
+    if response.status_code != 200:
+        st.error(f"API error: {response.json()['detail']}")
+        return pd.DataFrame()
+    return pd.DataFrame(response.json())
 
 
 def visualize_predictions(preds: pd.DataFrame, selected_parameters: list[str], days_forward: int):
@@ -55,8 +66,7 @@ def main():
 
     selected_parameters, days_forward = user_input_features()
 
-    preds = predict(days_forward)
-    preds["date"] = get_dates(days_forward)
+    preds = predict_via_api(days_forward)
 
     visualize_predictions(preds, selected_parameters, days_forward)
 
