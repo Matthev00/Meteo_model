@@ -19,6 +19,7 @@ classifiers = [
 ]
 requires-python = "~=3.10"
 dependencies = [
+    "fastapi>=0.115.6",
     "ipykernel>=6.29.5",
     "jupyter>=1.1.1",
     "meteostat>=1.6.8",
@@ -33,6 +34,7 @@ dependencies = [
     "seaborn>=0.13.2",
     "streamlit>=1.40.1",
     "torch>=2.5.1",
+    "uvicorn>=0.32.1",
 ]
 
 [tool.black]
