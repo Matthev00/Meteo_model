@@ -57,7 +57,7 @@ create_environment:
 ## Run experiments
 .PHONY: run_experiments
 run_experiments:
-	$(PYTHON_INTERPRETER) meteo_model/training/perform_experiments.py
+	./meteo_model/training/run.sh
 
 
 #################################################################################
