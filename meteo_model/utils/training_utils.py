@@ -100,6 +100,7 @@ def parse_arguments() -> argparse.Namespace:
         type=int,
         nargs="+",
         help="Number of output channels in TCN. It also determines the number of layers of that TCN",
+        default=[9, 2, 1, 2, 9]
     )
 
     parser.add_argument("--lr", type=float, default=0.001, help="Learning rate for the optimizer")
