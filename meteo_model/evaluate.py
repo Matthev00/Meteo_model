@@ -42,7 +42,7 @@ def main():
     )
     X, y = next(iter(test_dl))
 
-    model = load_model("Mete-test", 4)
+    model = load_model("TCN", 1)
     model.eval()
     with torch.inference_mode():
         pred = model(X.to(device))[0].detach().cpu().numpy()
