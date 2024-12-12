@@ -60,6 +60,13 @@ run_experiments:
 	./meteo_model/training/run.sh
 
 
+## Run API and Streamlit application
+.PHONY: run_app
+run_app:
+	$(PYTHON_INTERPRETER) api/api.py & \
+	sleep 2 && $(PYTHON_INTERPRETER) -m streamlit run app/app.py & \
+	wait
+
 #################################################################################
 # PROJECT RULES                                                                 #
 #################################################################################
