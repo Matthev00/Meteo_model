@@ -19,6 +19,7 @@ W tabeli zaznaczyłem najlepsze propozycje, które następnie bardziej szczegó�
 
 Modele te uzyskaly delikatnie lepsze rezultaty niż LSTM, za to czas ich uczenia jest zauważalnie mniejszy
 ![alt text](image-10.png)
+![alt text](image-11.png)
 
 Nalepszy okazał się model **fearless-bird-71** o nastepujących rezutatach:
 - Dropout: 0.00038829033545963545
