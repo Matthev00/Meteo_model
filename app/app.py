@@ -46,14 +46,15 @@ def visualize_predictions(preds: pd.DataFrame, selected_parameters: list[str], d
 
 def user_input_features() -> tuple[list[str], int]:
     st.sidebar.title("Vizualization settings")
-    parameters = COLUMNS
+    parameters = COLUMNS.copy()
+    parameters.remove("snow")
     selected_parameters = st.sidebar.multiselect(
         "Select parameters to visualize:", parameters, default=["tavg"]
     )
     if not selected_parameters:
         st.warning("Please select at least one parameter to visualize.")
         return [], 0
-    days_forward = st.sidebar.slider("Number of time steps to predict: ", 1, 4, 4)
+    days_forward = st.sidebar.slider("Number of time steps to predict: ", 1, 8, 4)
 
     return selected_parameters, days_forward
 
