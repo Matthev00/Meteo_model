@@ -6,9 +6,11 @@ from meteo_model.data.api.api_data_provider import get_weather_tensor_for_days
 
 app = Flask(__name__)
 
+
 @app.route("/")
 def read_root():
     return {"message": "Welcome to the Meteo Forecasting API"}
+
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -19,19 +21,31 @@ def predict():
         return jsonify({"detail": "Number of days must be between 1 and 8"}), 400
 
     try:
-        X = get_weather_tensor_for_days(n_days, ["WARSAW"])  # Change location
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
         model_for_days = {
-            1: ("Mete-test", 4),
-            2: ("Mete-test", 4),
-            3: ("Mete-test", 4),
-            4: ("Mete-test", 4),
-            # 5: ("Mete-test", 4),
-            # 6: ("Mete-test", 4),
-            # 7: ("Mete-test", 4),
-            # 8: ("Mete-test", 4),
-        }  # Change models
+            1: ("MeteoModel-1_day", 2),
+            2: ("MeteoModel-2_days", 1),
+            3: ("MeteoModel-3_days", 1),
+            4: ("MeteoModel-4_days", 1),
+            5: ("MeteoModel-5_days", 1),
+            6: ("MeteoModel-6_days", 2),
+            7: ("MeteoModel-7_days", 2),
+            8: ("MeteoModel-8_days", 2),
+        }
+        input_len = {
+            1: 16,
+            2: 6,
+            3: 5,
+            4: 10,
+            5: 28,
+            6: 6,
+            7: 12,
+            8: 7,
+        }
+        X = get_weather_tensor_for_days(
+            input_len[n_days], ["WARSAW", "WROCLAW", "POZNAN", "KRAKOW", "BIALYSTOK"]
+        )
 
         model = load_model(*model_for_days[n_days]).to(device)
         model.eval()
@@ -46,6 +60,7 @@ def predict():
 
     except Exception as e:
         return jsonify({"detail": f"Prediction failed: {str(e)}"}), 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
