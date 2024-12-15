@@ -28,6 +28,7 @@ Projekt jest inspirowany artykułem [Springer](https://link.springer.com/article
   - Prognozy temperatury.
   - Przewidywania ciśnienia.
   - Szacowania opadów.
+  - Przeiwdywania predkości oraz kierunku wiatru.
 
 ---
 
@@ -50,7 +51,6 @@ Aby uruchomić projekt lokalnie:
     ```bash
     make requirements
     ```
-
 ---
 
 ## **Sposób użycia**
@@ -69,6 +69,14 @@ Aby uruchomić projekt lokalnie:
     ```bash
     make run_experiments
     ```
+    - Wyniki eksperymentów można obejrzeć w dashboardzie mlflow `mlflow ui`
+    - Jeśli po zapoznaniu się z eksperymentami użytkownik chce zmienić modele należy zarejstrować wybrane modele zgodnie z <https://mlflow.org/docs/latest/model-registry.html>
+    - Aby używać modeli w Api należy zmodyfikować strukturę model_for_days w pliku [api](api/api.py)
+
+4. Uruchomienie aplikacji:
+    ```bash
+    make run_app
+    ```
 
 ---
 
@@ -81,7 +89,8 @@ Aby uruchomić projekt lokalnie:
 ├── data
 │   ├── normalized     <- Znormalizowane dane
 │   ├── processed      <- Pobrane i przetworzone dane
-│   └── raw            <- Oryginalne dane
+│   |── raw            <- Oryginalne dane
+|   └── stats.json     <- Dane do normalizacji
 │
 ├── docs               <- Folder z dokumentacją
 │   ├── Design_Proposal.md
@@ -92,19 +101,22 @@ Aby uruchomić projekt lokalnie:
 │   └── 03_perform_experiment.ipynb
 │
 ├── reports            <- Wygenerowane analizy, np. HTML, PDF
-│   └── figures        <- Grafiki i wykresy użyte w raportach
+│   |── figures        <- Grafiki i wykresy odnoszące sie do danych i modeli
+│   └── training_results <- Analizy eksperymentów 
 │
 ├── requirements.txt   <- Wymagania środowiska
 │
 ├── setup.py           <- Skrypt instalacyjny projektu
 ├── pyproject.toml     <- Plik konfiguracyjny projektu
 │
+├── api                <- Kod źródłowy API serwującego predykcję
+├── app                <- Kod źródłowy aplikacji wizualizującej predykcję
+├── mlruns             <- Folder na wyniki ekspermentów oraz wytrenowane modele 
 └── zprp_meteo_model   <- Kod źródłowy projektu
     ├── data/          <- Moduły przetwarzające dane
     ├── model/         <- Kod definiujący architektury modeli
     ├── training/      <- Moduły związane z trenowaniem modeli
     └── utils/         <- Narzędzia wspomagające projekt
-
 ```
 
 ---
@@ -128,6 +140,7 @@ Projekt jest objęty licencją MIT. Szczegóły można znaleźć w pliku [LICENS
 Szczegółowe informacje o projekcie znajdują się w dodatkowych plikach:  
 - [Design Proposal](docs/Design_Proposal.md)
 - [Analiza literatury](docs/Analiza_Literatury.md)
+- [Krótka analiza eksperymentow LSTM](reports/training_results/Analiza_rezultatow_LSTM.md)
+- [Krótka analiza eksperymentow TCN](reports/training_results/Analiza_rezultatow_TCN.md)
 
 --------
-
