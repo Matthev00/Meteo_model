@@ -16,10 +16,7 @@ def objective_lstm(trial):
     hidden_size = trial.suggest_int("hidden_size", 16, 256)
     input_len = trial.suggest_int("input_len", 4, 14)
     location = trial.suggest_categorical(
-        "location", (
-            "BIALYSTOK, WARSAW, WROCLAW, KRAKOW, POZNAN",
-            "WARSAW"
-        )
+        "location", ("BIALYSTOK, WARSAW, WROCLAW, KRAKOW, POZNAN", "WARSAW")
     )
     output_len = 8
     split_ratio = 0.8
@@ -82,7 +79,6 @@ def objective_tcn(trial):
     num_channels.append(num_features)
 
     train_loader, test_loader = create_dataloaders(
-        
         location=location,
         input_len=input_len,
         output_len=output_len,

@@ -44,7 +44,7 @@ def main():
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     loss_fn = torch.nn.MSELoss()
 
-    results = train(
+    train(
         model=model,
         train_dataloader=train_dl,
         test_dataloader=test_dl,

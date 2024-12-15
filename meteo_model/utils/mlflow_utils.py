@@ -1,7 +1,5 @@
 import os
 import yaml
-import os
-import yaml
 import shutil
 
 

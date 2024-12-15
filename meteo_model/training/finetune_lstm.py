@@ -20,11 +20,13 @@ def main():
         batch_size=22,
         num_workers=num_workers,
     )
-    
+
     model = load_model("LSTM-best-base", 2)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=0.0021950336406807353)
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=2, verbose=True)
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        optimizer, mode="min", factor=0.1, patience=2, verbose=True
+    )
 
     loss_fn = torch.nn.MSELoss()
 
@@ -38,7 +40,7 @@ def main():
         device=device,
         enable_logging=True,
         experiment_name="FineTuneLSTM",
-        scheduler=scheduler
+        scheduler=scheduler,
     )
 
 

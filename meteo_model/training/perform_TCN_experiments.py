@@ -17,10 +17,7 @@ def objective_tcn(trial, experiment_name, n_days):
     input_len = trial.suggest_int("input_len", 4, 32)
     kernel_size = trial.suggest_int("kernel_size", 2, input_len)
     location = trial.suggest_categorical(
-        "location", (
-            "BIALYSTOK, WARSAW, WROCLAW, KRAKOW, POZNAN",
-            "WARSAW"
-        )
+        "location", ("BIALYSTOK, WARSAW, WROCLAW, KRAKOW, POZNAN", "WARSAW")
     )
     location = location.split(", ")
 
@@ -34,7 +31,6 @@ def objective_tcn(trial, experiment_name, n_days):
     num_channels.append(num_features)
 
     train_loader, test_loader = create_dataloaders(
-        
         location=location,
         input_len=input_len,
         output_len=output_len,
