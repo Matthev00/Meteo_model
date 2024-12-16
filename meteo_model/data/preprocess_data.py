@@ -7,7 +7,7 @@ from meteo_model.data.get_stats import create_stat_file
 from meteo_model.data.normaliser import normalize_data
 from meteo_model.data.config import PATH_TO_STATS, LOCATIONS_NAMES, BASE_PATH
 from meteo_model.utils.file_utils import get_station_name_from_city_name
-from meteo_model.data.data_cleaner import DataCleaner
+from meteo_model.data.data_cleaner import DataCleanerAndSaver
 
 
 def get_raw_data(
@@ -33,7 +33,7 @@ def clean_and_save_data(city_name: str):
     data, data_paths = get_raw_data(station)
     yield f"{city_name}: {len(data)} files found."
 
-    cleaner = DataCleaner(data, data_paths)
+    cleaner = DataCleanerAndSaver(data, data_paths)
     cleaner.drop_columns()
     yield f"{city_name}: Columns dropped."
 

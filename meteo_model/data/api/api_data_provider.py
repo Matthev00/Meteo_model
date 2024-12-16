@@ -1,19 +1,16 @@
-from meteo_model.data.data_loader import create_dataloaders
+from meteo_model.data.api.fetch_data import get_normalised_data_from_api
 from pathlib import Path
 import os
 import torch
 
 
 def get_weather_tensor_for_days(days: int, location_names: list[str]) -> torch.Tensor:
-    ### Calkowicie do zastąpienie przez faktyczne dane z api to jest tylko na pokaz że apka działa
-    _, test_dl = create_dataloaders(
-        root_dir=Path("data/normalized"),
-        location=location_names,
-        input_len=32,
-        output_len=4,
-        split_ratio=0.8,
-        batch_size=16,
-        num_workers=os.cpu_count() or 1,
-    )
-    X, _ = next(iter(test_dl))
-    return X
+    normalised_data_from_api = get_normalised_data_from_api(days, location_names)
+    loc_days_attr = [df.values.tolist() for df in normalised_data_from_api.values()]
+    api_data_tensor = torch.tensor(loc_days_attr, dtype=torch.float32)
+    return api_data_tensor
+
+
+
+if __name__ == "__main__":
+    print(get_weather_tensor_for_days(7, ["WARSAW", "WROCLAW"]))

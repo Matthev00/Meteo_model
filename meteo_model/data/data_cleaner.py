@@ -6,9 +6,9 @@ from meteo_model.utils.file_utils import prepare_directory
 
 
 class DataCleaner:
-    def __init__(self, dataframes: list[pd.DataFrame], data_paths: list[Path]):
+    def __init__(self, dataframes, columns_to_drop = ["station", "tsun", "wpgt"]):
         self.dataframes = dataframes
-        self.data_paths = data_paths
+        self.columns_to_drop = columns_to_drop
 
     def drop_columns(self) -> None:
         """
@@ -16,7 +16,7 @@ class DataCleaner:
         ['station', 'tsun', 'wpgt']
         """
         for df in self.dataframes:
-            df.drop(columns=["station", "tsun", "wpgt"], inplace=True)
+            df.drop(columns=self.columns_to_drop, inplace=True)
 
     def handle_NaN_based_on_trend(self) -> None:
         """
@@ -76,6 +76,14 @@ class DataCleaner:
         for df in self.dataframes:
             df["snow"] = df["snow"].clip(upper=800)
 
+
+
+
+class DataCleanerAndSaver(DataCleaner):
+    def __init__(self, dataframes: list[pd.DataFrame], data_paths: list[Path]):
+        super().__init__(dataframes)
+        self.data_paths = data_paths
+
     def save_data(self) -> None:
         """
         Save the cleaned dataframes to csv files.
@@ -84,3 +92,16 @@ class DataCleaner:
             processed_file_path = str(raw_path).replace("raw", "processed")
             prepare_directory(Path(processed_file_path).parent)
             df.to_csv(processed_file_path, index=False)
+
+
+class DataCleanerFromDict(DataCleaner):
+    def __init__(self, dataframes_dict: dict[str, pd.DataFrame]):
+        super().__init__(dataframes_dict.values(), ["tsun", "wpgt"])
+        self.dataframes_dict = dataframes_dict
+
+    def get_cleaned_dataframes_dict(self):
+        self.drop_columns()
+        self.handle_NaN_based_on_trend()
+        self.handle_NaN_based_on_sesonal_pattern()
+        self.clip_snow()
+        return self.dataframes_dict
