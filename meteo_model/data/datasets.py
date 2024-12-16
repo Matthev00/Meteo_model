@@ -80,7 +80,9 @@ class MeteoDataset(Dataset):
 
         return year, day
 
-    def _get_sequence(self, year: int, start_day: int, end_day: int, locations: list[str]) -> list[list[list[float]]]:
+    def _get_sequence(
+        self, year: int, start_day: int, end_day: int, locations: list[str]
+    ) -> list[list[list[float]]]:
         """
         Get the sequence of data for the given year and days.
         Checks if the start_day and end_day are within the bounds of the given year.
@@ -103,7 +105,7 @@ class MeteoDataset(Dataset):
         return sequence
 
     def _get_target_sequence(self, year: int, day: int) -> list[list[list[float]]]:
-        start_day = day 
+        start_day = day
         end_day = day + self.output_len
         return self._get_sequence(year, start_day, end_day, [self.target_location])
 

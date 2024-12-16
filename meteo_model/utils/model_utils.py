@@ -1,5 +1,4 @@
 import mlflow.pytorch
-import torch
 from meteo_model.model.base_model import BaseWeatherModel
 
 

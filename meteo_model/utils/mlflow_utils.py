@@ -1,7 +1,5 @@
 import os
 import yaml
-import os
-import yaml
 import shutil
 
 
@@ -25,6 +23,31 @@ def update_meta_yaml(mlruns_path: str, old_prefix: str, new_prefix: str) -> None
                         old_path = meta_data["artifact_uri"]
                         new_path = old_path.replace(old_prefix, new_prefix)
                         meta_data["artifact_uri"] = new_path
+
+                        with open(file_path, "w") as f:
+                            yaml.safe_dump(meta_data, f)
+
+
+def update_model_meta_yaml(mlruns_models: str, old_prefix: str, new_prefix: str) -> None:
+    for root, dirs, files in os.walk(mlruns_models):
+        for file in files:
+            if file == "meta.yaml":
+                file_path = os.path.join(root, file)
+                with open(file_path, "r") as f:
+                    try:
+                        meta_data = yaml.safe_load(f)
+                    except yaml.YAMLError as e:
+                        print(f"Error {file_path}: {e}")
+                        continue
+
+                    if "source" in meta_data:
+                        old_path = meta_data["source"]
+                        new_path = old_path.replace(old_prefix, new_prefix)
+                        meta_data["source"] = new_path
+
+                        old_path = meta_data["storage_location"]
+                        new_path = old_path.replace(old_prefix, new_prefix)
+                        meta_data["storage_location"] = new_path
 
                         with open(file_path, "w") as f:
                             yaml.safe_dump(meta_data, f)
@@ -54,8 +77,3 @@ def delete_invalid_runs(mlruns_dir, valid_run_ids):
                 run_path = os.path.join(experiment_path, run_id)
                 if os.path.isdir(run_path) and run_id not in valid_run_ids:
                     shutil.rmtree(run_path)
-
-
-if __name__ == "__main__":
-    valid_run_ids = get_valid_run_ids(MODELS_DIR)
-    delete_invalid_runs(MLRUNS_DIR, valid_run_ids)

@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import json
 
 
 def visualize_predictions(
@@ -33,4 +32,3 @@ def visualize_predictions(
 
     plt.tight_layout()
     plt.show()
-
