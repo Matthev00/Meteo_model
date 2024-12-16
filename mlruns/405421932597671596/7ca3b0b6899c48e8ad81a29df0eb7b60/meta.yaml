@@ -1,0 +1,15 @@
+artifact_uri: file:///home/mateusz/PW/ZPRP/Projekt/zprp-meteo-model/mlruns/405421932597671596/7ca3b0b6899c48e8ad81a29df0eb7b60/artifacts
+end_time: 1733687956437
+entry_point_name: ''
+experiment_id: '405421932597671596'
+lifecycle_stage: active
+run_id: 7ca3b0b6899c48e8ad81a29df0eb7b60
+run_name: classy-stag-317
+run_uuid: 7ca3b0b6899c48e8ad81a29df0eb7b60
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1733687749933
+status: 3
+tags: []
+user_id: root

@@ -1,0 +1,6 @@
+artifact_location: file:///home/mateusz/PW/ZPRP/Projekt/zprp-meteo-model/mlruns/801592398909839266
+creation_time: 1733491688351
+experiment_id: '801592398909839266'
+last_update_time: 1733491688351
+lifecycle_stage: active
+name: FineTuneLSTM

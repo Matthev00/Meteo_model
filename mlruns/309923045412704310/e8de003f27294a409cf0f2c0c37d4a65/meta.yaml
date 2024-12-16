@@ -1,0 +1,15 @@
+artifact_uri: file:///home/mateusz/PW/ZPRP/Projekt/zprp-meteo-model/mlruns/309923045412704310/e8de003f27294a409cf0f2c0c37d4a65/artifacts
+end_time: 1733686988951
+entry_point_name: ''
+experiment_id: '309923045412704310'
+lifecycle_stage: active
+run_id: e8de003f27294a409cf0f2c0c37d4a65
+run_name: magnificent-dog-223
+run_uuid: e8de003f27294a409cf0f2c0c37d4a65
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1733686824757
+status: 3
+tags: []
+user_id: root

@@ -1,0 +1,6 @@
+artifact_location: file:///home/slukawski/zprp-meteo-model/mlruns/514992033311720890
+creation_time: 1733991362786
+experiment_id: '514992033311720890'
+last_update_time: 1733991362786
+lifecycle_stage: active
+name: TCN_experiment_day_8

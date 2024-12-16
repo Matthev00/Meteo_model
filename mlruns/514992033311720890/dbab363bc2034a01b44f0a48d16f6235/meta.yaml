@@ -1,0 +1,15 @@
+artifact_uri: file:///home/mateusz/PW/ZPRP/Projekt/zprp-meteo-model/mlruns/514992033311720890/dbab363bc2034a01b44f0a48d16f6235/artifacts
+end_time: 1733994793727
+entry_point_name: ''
+experiment_id: '514992033311720890'
+lifecycle_stage: active
+run_id: dbab363bc2034a01b44f0a48d16f6235
+run_name: fearless-bird-71
+run_uuid: dbab363bc2034a01b44f0a48d16f6235
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1733994655176
+status: 3
+tags: []
+user_id: slukawski

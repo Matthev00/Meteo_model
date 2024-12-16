@@ -1,0 +1,15 @@
+artifact_uri: file:///home/mateusz/PW/ZPRP/Projekt/zprp-meteo-model/mlruns/200125285106161055/e0c6cab6713c406096d3cb6b64ae469d/artifacts
+end_time: 1733686409329
+entry_point_name: ''
+experiment_id: '200125285106161055'
+lifecycle_stage: active
+run_id: e0c6cab6713c406096d3cb6b64ae469d
+run_name: serious-dog-752
+run_uuid: e0c6cab6713c406096d3cb6b64ae469d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1733686233510
+status: 3
+tags: []
+user_id: root
