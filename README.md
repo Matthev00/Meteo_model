@@ -74,9 +74,14 @@ Aby uruchomić projekt lokalnie:
     - Aby używać modeli w Api należy zmodyfikować strukturę model_for_days w pliku [api](api/api.py)
 
 4. Uruchomienie aplikacji:
-    ```bash
-    make run_app
-    ```
+   1. Przed pierwszym uruchomieniem aplikacji należy dostosowąć ścieżki do modeli poprzez:
+        ```bash
+        make mlflow_models
+        ``` 
+   2. Uruchomienie 
+        ```bash
+        make run_app
+        ```
 
 ---
 
@@ -112,7 +117,7 @@ Aby uruchomić projekt lokalnie:
 ├── api                <- Kod źródłowy API serwującego predykcję
 ├── app                <- Kod źródłowy aplikacji wizualizującej predykcję
 ├── mlruns             <- Folder na wyniki ekspermentów oraz wytrenowane modele 
-└── zprp_meteo_model   <- Kod źródłowy projektu
+└── zprp_meteo_model   <- Kod źródłowy projektu(Część "badawcza")
     ├── data/          <- Moduły przetwarzające dane
     ├── model/         <- Kod definiujący architektury modeli
     ├── training/      <- Moduły związane z trenowaniem modeli

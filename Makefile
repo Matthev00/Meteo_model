@@ -60,6 +60,11 @@ run_experiments:
 	./meteo_model/training/run.sh
 
 
+## Corect MlFlow paths to models
+.PHONY: mlflow_models
+mlflow_models:
+	$(PYTHON_INTERPRETER) meteo_model/set_mlflow_paths.py
+
 ## Run API and Streamlit application
 .PHONY: run_app
 run_app:
