@@ -6,7 +6,7 @@ from meteo_model.utils.file_utils import prepare_directory
 
 
 class DataCleaner:
-    def __init__(self, dataframes, columns_to_drop = ["station", "tsun", "wpgt"]):
+    def __init__(self, dataframes, columns_to_drop=["station", "tsun", "wpgt"]):
         self.dataframes = dataframes
         self.columns_to_drop = columns_to_drop
 
@@ -77,8 +77,6 @@ class DataCleaner:
             df["snow"] = df["snow"].clip(upper=800)
 
 
-
-
 class DataCleanerAndSaver(DataCleaner):
     def __init__(self, dataframes: list[pd.DataFrame], data_paths: list[Path]):
         super().__init__(dataframes)
@@ -99,9 +97,13 @@ class DataCleanerFromDict(DataCleaner):
         super().__init__(dataframes_dict.values(), ["tsun", "wpgt"])
         self.dataframes_dict = dataframes_dict
 
+    def fill_prcp(self):
+        for df in self.dataframes_dict.values():
+            df["prcp"] = df["prcp"].fillna(0)
+
     def get_cleaned_dataframes_dict(self):
         self.drop_columns()
         self.handle_NaN_based_on_trend()
-        self.handle_NaN_based_on_sesonal_pattern()
+        self.fill_prcp()
         self.clip_snow()
         return self.dataframes_dict
