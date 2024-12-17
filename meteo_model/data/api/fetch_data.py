@@ -2,6 +2,7 @@ import os
 import datetime
 import requests
 import pandas as pd
+from time import sleep
 from meteo_model.data.data_cleaner import DataCleanerFromDict
 from meteo_model.data.config import PATH_TO_STATS
 from meteo_model.data.normaliser import normalize_data
@@ -51,6 +52,7 @@ def get_weather_data_for_days(days: int, location_names: list[str]) -> dict[str,
     data = {}
     for location in location_names:
         data[location] = fetch_weather_data(location, start_date, end_date)
+        sleep(2)
     return data
 
 
