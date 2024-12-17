@@ -1,6 +1,5 @@
 from meteo_model.data.api.fetch_data import get_normalised_data_from_api
-from pathlib import Path
-import os
+from meteo_model.data.config import LOCATIONS_NAMES
 import torch
 
 
@@ -11,6 +10,5 @@ def get_weather_tensor_for_days(days: int, location_names: list[str]) -> torch.T
     return api_data_tensor
 
 
-
 if __name__ == "__main__":
-    print(get_weather_tensor_for_days(7, ["WARSAW", "WROCLAW"]))
+    print(get_weather_tensor_for_days(7, LOCATIONS_NAMES))

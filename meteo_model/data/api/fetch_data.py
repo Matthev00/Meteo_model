@@ -52,7 +52,7 @@ def get_weather_data_for_days(days: int, location_names: list[str]) -> dict[str,
     data = {}
     for location in location_names:
         data[location] = fetch_weather_data(location, start_date, end_date)
-        sleep(2)
+        sleep(0.5)
     return data
 
 
@@ -60,16 +60,18 @@ def transform_dict_into_df(weather_data) -> pd.DataFrame:
     return pd.DataFrame(weather_data)
 
 
-def clean_api_data(api_data):
+def clean_api_data(api_data: dict[str, pd.DataFrame]) -> dict[str, pd.DataFrame]:
     cleaner = DataCleanerFromDict(api_data)
     return cleaner.get_cleaned_dataframes_dict()
 
-def read_stat_json():
+
+def read_stat_json() -> dict:
     with open(PATH_TO_STATS) as f:
         stats = json.load(f)
     return stats
 
-def normalise_cleaned_api_data(cleaned_api_data : dict[str, pd.DataFrame]):
+
+def normalise_cleaned_api_data(cleaned_api_data: dict[str, pd.DataFrame]) -> dict[str, pd.DataFrame]:
     stats = read_stat_json()
     normalised_dict = dict()
     for city, cleaned_df in cleaned_api_data.items():
@@ -77,13 +79,18 @@ def normalise_cleaned_api_data(cleaned_api_data : dict[str, pd.DataFrame]):
         normalised_dict[city] = normalised_df
     return normalised_dict
 
-def get_normalised_data_from_api(days: int, location_names: list[str]):
+
+def get_normalised_data_from_api(days: int, location_names: list[str]) -> dict[str, pd.DataFrame]:
     weather_data_dict = get_weather_data_for_days(days, location_names)
-    weather_data_df_dict = {city : transform_dict_into_df(weather_data_of_city) for city, weather_data_of_city in weather_data_dict.items()}
+    weather_data_df_dict = {
+        city: transform_dict_into_df(weather_data_of_city)
+        for city, weather_data_of_city in weather_data_dict.items()
+    }
     cleaned = clean_api_data(weather_data_df_dict)
     normalised = normalise_cleaned_api_data(cleaned)
     return normalised
 
+
 if __name__ == "__main__":
     cities = ["WARSAW"]
-    weather_data = get_weather_data_for_days(7, cities)
+    weather_data = get_normalised_data_from_api(7, cities)
