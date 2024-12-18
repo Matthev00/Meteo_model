@@ -18,14 +18,14 @@ def predict_via_api(n_days: int) -> pd.DataFrame:
 
 def visualize_predictions(preds: pd.DataFrame, selected_parameters: list[str], days_forward: int):
     param_names = {
-        "tavg": "Average temperature",
-        "tmin": "Minimum temperature",
-        "tmax": "Maximum temperature",
-        "prcp": "Precipitation",
-        "snow": "Snow",
-        "wdir": "Wind direction",
-        "wspd": "Wind speed",
-        "pres": "Pressure",
+        "tavg": ("°C", "Average temperature"),
+        "tmin": ("°C", "Minimum temperature"),
+        "tmax": ("°C", "Maximum temperature"),
+        "prcp": ("mm", "Precipitation"),
+        "snow": ("mm", "Snow"),
+        "wdir": ("°" ,"Wind direction"),
+        "wspd": ("km/h", "Wind speed"),
+        "pres": ("hPa", "Pressure"),
     }
 
     st.subheader("Visualization")
@@ -37,10 +37,10 @@ def visualize_predictions(preds: pd.DataFrame, selected_parameters: list[str], d
         col = cols[i % num_columns]
         with col:
             if days_forward == 1:
-                fig = px.scatter(preds, x="date", y=param, title=param_names[param])
+                fig = px.scatter(preds, x="date", y=param, title=param_names[param][1])
             else:
-                fig = px.line(preds, x="date", y=param, title=param_names[param])
-            fig.update_layout(xaxis_title="Date (DD-MM)")
+                fig = px.line(preds, x="date", y=param, title=param_names[param][1])
+            fig.update_layout(xaxis_title="Date (DD-MM)", yaxis_title=param_names[param][0])
             st.plotly_chart(fig)
 
 
