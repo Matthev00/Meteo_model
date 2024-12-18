@@ -90,7 +90,12 @@ def normalise_cleaned_api_data(cleaned_api_data: dict[str, pd.DataFrame]) -> dic
     return normalised_dict
 
 
-def get_normalised_data_from_api(days: int, location_names: list[str]) -> dict[str, pd.DataFrame]:
+def get_date(df_dict: dict[str, pd.DataFrame]) -> str:
+    key = next(iter(df_dict))
+    return df_dict[key]["date"].iloc[-1]
+
+
+def get_normalised_data_from_api(days: int, location_names: list[str]) -> tuple[dict[str, pd.DataFrame], str]:
     weather_data_dict = get_weather_data_for_days(days, location_names)
     weather_data_df_dict = {
         city: transform_dict_into_df(weather_data_of_city)
@@ -98,9 +103,10 @@ def get_normalised_data_from_api(days: int, location_names: list[str]) -> dict[s
     }
     cleaned = clean_api_data(weather_data_df_dict)
     normalised = normalise_cleaned_api_data(cleaned)
-    return normalised
+    return normalised, get_date(cleaned)
 
 
 if __name__ == "__main__":
     cities = ["WARSAW", "BIALYSTOK"]
-    weather_data = get_normalised_data_from_api(7, cities)
+    weather_data, start_day = get_normalised_data_from_api(7, cities)
+    print(start_day)
