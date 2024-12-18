@@ -60,13 +60,13 @@ class DataCleaner:
 
         return median_by_day
 
-    def save_median_to_file(self, median_by_day: pd.DataFrame, file_path: str) -> None:
+    def save_median_to_file(self, median_by_day: pd.DataFrame, file_path: Path) -> None:
         median_by_day.to_csv(file_path, index=False)
 
-    def load_median_from_file(self, file_path: str) -> pd.DataFrame:
+    def load_median_from_file(self, file_path: Path) -> pd.DataFrame:
         return pd.read_csv(file_path)
 
-    def handle_NaN_based_on_sesonal_pattern(self, median_file: str, start_offset: int = 0) -> None:
+    def handle_NaN_based_on_sesonal_pattern(self, median_file: Path, start_offset: int = 0) -> None:
         """
         Handle missing values in the data based on group. In Place.
         """
