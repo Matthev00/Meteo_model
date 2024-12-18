@@ -59,7 +59,7 @@ class DataCleaner:
                 )
 
         return median_by_day
-    
+
     def save_median_to_file(self, median_by_day: pd.DataFrame, file_path: str) -> None:
         median_by_day.to_csv(file_path, index=False)
 

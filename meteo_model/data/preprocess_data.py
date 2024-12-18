@@ -39,7 +39,7 @@ def clean_and_save_data(city_name: str):
 
     cleaner.handle_NaN_based_on_trend()
     yield f"{city_name}: NaN handled based on trend."
-    
+
     median_dir = Path(MEDIAN_DIR)
     median_dir.mkdir(parents=True, exist_ok=True)
     cleaner.handle_NaN_based_on_sesonal_pattern(median_dir / f"{station}.csv")
