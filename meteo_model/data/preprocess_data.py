@@ -5,7 +5,7 @@ from pathlib import Path
 
 from meteo_model.data.get_stats import create_stat_file
 from meteo_model.data.normaliser import normalize_data
-from meteo_model.data.config import PATH_TO_STATS, LOCATIONS_NAMES, BASE_PATH
+from meteo_model.data.config import PATH_TO_STATS, LOCATIONS_NAMES, BASE_PATH, MEDIAN_DIR
 from meteo_model.utils.file_utils import get_station_name_from_city_name
 from meteo_model.data.data_cleaner import DataCleanerAndSaver
 
@@ -39,8 +39,10 @@ def clean_and_save_data(city_name: str):
 
     cleaner.handle_NaN_based_on_trend()
     yield f"{city_name}: NaN handled based on trend."
-
-    cleaner.handle_NaN_based_on_sesonal_pattern()
+    
+    median_dir = Path(MEDIAN_DIR)
+    median_dir.mkdir(parents=True, exist_ok=True)
+    cleaner.handle_NaN_based_on_sesonal_pattern(median_dir / f"{station}.csv")
     yield f"{city_name}: NaN handled based on seasonal pattern."
 
     cleaner.clip_snow()

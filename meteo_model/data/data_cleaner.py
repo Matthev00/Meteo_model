@@ -1,8 +1,10 @@
 import pandas as pd
 import numpy as np
 from pathlib import Path
+import os
 
 from meteo_model.utils.file_utils import prepare_directory
+from meteo_model.data.config import MEDIAN_DIR
 
 
 class DataCleaner:
@@ -57,17 +59,27 @@ class DataCleaner:
                 )
 
         return median_by_day
+    
+    def save_median_to_file(self, median_by_day: pd.DataFrame, file_path: str) -> None:
+        median_by_day.to_csv(file_path, index=False)
 
-    def handle_NaN_based_on_sesonal_pattern(self) -> None:
+    def load_median_from_file(self, file_path: str) -> pd.DataFrame:
+        return pd.read_csv(file_path)
+
+    def handle_NaN_based_on_sesonal_pattern(self, median_file: str, start_offset: int = 0) -> None:
         """
         Handle missing values in the data based on group. In Place.
         """
-        median_by_day = self.calculate_median_by_day()
+        if os.path.exists(median_file):
+            median_by_day = self.load_median_from_file(median_file)
+        else:
+            median_by_day = self.calculate_median_by_day()
+            self.save_median_to_file(median_by_day, median_file)
         for df in self.dataframes:
             for day in range((min(366, len(df)))):
                 for column in ["prcp", "wdir", "wspd", "pres"]:
                     if pd.isna(df.at[day, column]):
-                        df.at[day, column] = median_by_day.at[day, column]
+                        df.at[day, column] = median_by_day.at[day + start_offset, column]
 
     def clip_snow(self) -> None:
         """
@@ -93,17 +105,14 @@ class DataCleanerAndSaver(DataCleaner):
 
 
 class DataCleanerFromDict(DataCleaner):
-    def __init__(self, dataframes_dict: dict[str, pd.DataFrame]):
-        super().__init__(dataframes_dict.values(), ["tsun", "wpgt"])
-        self.dataframes_dict = dataframes_dict
+    def __init__(self, df: pd.DataFrame, city_name: str, date_offset: int):
+        super().__init__([df], ["tsun", "wpgt"])
+        self.city_name = city_name
+        self.date_offset = date_offset
 
-    def fill_prcp(self):
-        for df in self.dataframes_dict.values():
-            df["prcp"] = df["prcp"].fillna(0)
-
-    def get_cleaned_dataframes_dict(self):
+    def get_cleaned_df(self) -> None:
         self.drop_columns()
         self.handle_NaN_based_on_trend()
-        self.fill_prcp()
+        median_file = Path(MEDIAN_DIR) / f"{self.city_name}.csv"
+        self.handle_NaN_based_on_sesonal_pattern(median_file, self.date_offset)
         self.clip_snow()
-        return self.dataframes_dict

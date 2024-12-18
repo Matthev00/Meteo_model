@@ -1,5 +1,5 @@
 import os
-import datetime
+from datetime import datetime, timedelta
 import requests
 import pandas as pd
 from time import sleep
@@ -41,9 +41,9 @@ def fetch_weather_data(location: str, start_date: str, end_date: str) -> list:
 
 
 def get_datetimes(days: int) -> tuple[str, str]:
-    today = datetime.datetime.now()
+    today = datetime.now()
     end_date = today.strftime("%Y-%m-%d")
-    start_date = (today - datetime.timedelta(days=days)).strftime("%Y-%m-%d")
+    start_date = (today - timedelta(days=days)).strftime("%Y-%m-%d")
     return start_date, end_date
 
 
@@ -60,9 +60,19 @@ def transform_dict_into_df(weather_data) -> pd.DataFrame:
     return pd.DataFrame(weather_data)
 
 
+def get_start_day_number(date_str: str) -> int:
+    date = datetime.strptime(date_str, "%Y-%m-%d")
+    start_of_year = datetime(date.year, 1, 1)
+    day_number = (date - start_of_year).days
+    return day_number
+
+
 def clean_api_data(api_data: dict[str, pd.DataFrame]) -> dict[str, pd.DataFrame]:
-    cleaner = DataCleanerFromDict(api_data)
-    return cleaner.get_cleaned_dataframes_dict()
+    for city, df in api_data.items():
+        day_number = get_start_day_number(df["date"].iloc[0])
+        cleaner = DataCleanerFromDict(df, city, day_number)
+        cleaner.get_cleaned_df()
+    return api_data
 
 
 def read_stat_json() -> dict:
@@ -92,5 +102,5 @@ def get_normalised_data_from_api(days: int, location_names: list[str]) -> dict[s
 
 
 if __name__ == "__main__":
-    cities = ["WARSAW"]
+    cities = ["WARSAW", "BIALYSTOK"]
     weather_data = get_normalised_data_from_api(7, cities)
