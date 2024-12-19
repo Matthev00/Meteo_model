@@ -2,6 +2,7 @@ import torch
 import math
 from tqdm.auto import tqdm
 from meteo_model.utils.training_utils import mlflow_logging
+from typing import Optional
 
 
 @mlflow_logging
@@ -15,7 +16,7 @@ def train(
     device: str = "cuda",
     enable_logging: bool = True,
     experiment_name: str = "MeteoModelForecasting",
-    scheduler: torch.optim.lr_scheduler = None,
+    scheduler: Optional[torch.optim.lr_scheduler.ReduceLROnPlateau] = None,
 ) -> dict[str, list[float]]:
 
     results: dict[str, list[float]] = {

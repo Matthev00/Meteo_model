@@ -66,7 +66,9 @@ class DataCleaner:
     def load_median_from_file(self, file_path: Path) -> pd.DataFrame:
         return pd.read_csv(file_path)
 
-    def handle_NaN_based_on_sesonal_pattern(self, median_file: Path, start_offset: int = 0) -> None:
+    def handle_NaN_based_on_sesonal_pattern(
+        self, median_file: Path, start_offset: int = 0
+    ) -> None:
         """
         Handle missing values in the data based on group. In Place.
         """
