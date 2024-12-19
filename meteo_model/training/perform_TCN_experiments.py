@@ -5,7 +5,7 @@ import argparse
 from meteo_model.training.engine import train
 from meteo_model.data.data_loader import create_dataloaders
 from meteo_model.model.weather_model_tcn import WeatherModelTCN
-from meteo_model.training.config import OPTUNA_STORAGE_PATH
+from meteo_model.training.config import OPTUNA_STORAGE_PATH_TCN
 
 
 def objective_tcn(trial, experiment_name, n_days):
@@ -70,7 +70,7 @@ def create_study_for_(objective, name, n_days):
     study = optuna.create_study(
         study_name=name,
         direction="minimize",
-        storage=OPTUNA_STORAGE_PATH,
+        storage=OPTUNA_STORAGE_PATH_TCN,
         load_if_exists=True,
     )
     study.optimize(lambda trial: objective(trial, name, n_days), n_trials=60)
