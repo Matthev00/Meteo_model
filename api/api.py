@@ -43,7 +43,7 @@ def predict():
             7: 12,
             8: 7,
         }
-        X = get_weather_tensor_for_days(
+        X, pred_end_day = get_weather_tensor_for_days(
             input_len[n_days], ["WARSAW", "WROCLAW", "POZNAN", "KRAKOW", "BIALYSTOK"]
         )
 
@@ -54,7 +54,7 @@ def predict():
             pred = model(X.to(device))[0].detach().cpu().numpy()
 
         preds = prepare_pred_df(pred).iloc[:n_days, :]
-        preds["date"] = get_dates(n_days)
+        preds["date"] = get_dates(pred_end_day, n_days)
 
         return jsonify(preds.to_dict(orient="records"))
 

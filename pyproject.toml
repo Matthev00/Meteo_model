@@ -57,5 +57,6 @@ dev = [
     "flake8>=7.1.1",
     "mypy>=1.13.0",
     "optuna-dashboard>=0.17.0",
+    "types-pyyaml>=6.0.12.20240917",
     "types-requests>=2.32.0.20241016",
 ]

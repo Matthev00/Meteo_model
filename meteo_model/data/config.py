@@ -16,6 +16,7 @@ LOCATIONS_NAMES = list(LOCATIONS.keys())
 
 PATHS_TO_DATA_FILES_STR = "data/processed/weather_data/*/*.csv"
 PATH_TO_STATS = "data/stats.json"
+MEDIAN_DIR = "data/median"
 
 API_URL = "https://meteostat.p.rapidapi.com/point/daily"
 
