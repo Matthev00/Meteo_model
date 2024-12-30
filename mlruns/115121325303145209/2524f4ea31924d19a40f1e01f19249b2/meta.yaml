@@ -1,0 +1,15 @@
+artifact_uri: file:///home/mateusz/PW/ZPRP/Projekt/zprp-meteo-model/mlruns/115121325303145209/2524f4ea31924d19a40f1e01f19249b2/artifacts
+end_time: 1733990706846
+entry_point_name: ''
+experiment_id: '115121325303145209'
+lifecycle_stage: active
+run_id: 2524f4ea31924d19a40f1e01f19249b2
+run_name: clumsy-snipe-354
+run_uuid: 2524f4ea31924d19a40f1e01f19249b2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1733990644152
+status: 3
+tags: []
+user_id: slukawski

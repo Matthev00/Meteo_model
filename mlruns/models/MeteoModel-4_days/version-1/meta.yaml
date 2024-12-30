@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1734121563602
+current_stage: None
+description: ''
+last_updated_timestamp: 1734121563602
+name: MeteoModel-4_days
+run_id: e0c6cab6713c406096d3cb6b64ae469d
+run_link: ''
+source: file:///home/mateusz/PW/ZPRP/Projekt/zprp-meteo-model/mlruns/200125285106161055/e0c6cab6713c406096d3cb6b64ae469d/artifacts/models
+status: READY
+status_message: null
+storage_location: file:///home/mateusz/PW/ZPRP/Projekt/zprp-meteo-model/mlruns/200125285106161055/e0c6cab6713c406096d3cb6b64ae469d/artifacts/models
+user_id: null
+version: 1

@@ -1,0 +1,15 @@
+artifact_uri: file:///home/mateusz/PW/ZPRP/Projekt/zprp-meteo-model/mlruns/472574071828813039/09fe8edd87e043a2b3626a8d4a73eed5/artifacts
+end_time: 1733685348918
+entry_point_name: ''
+experiment_id: '472574071828813039'
+lifecycle_stage: active
+run_id: 09fe8edd87e043a2b3626a8d4a73eed5
+run_name: unequaled-goat-342
+run_uuid: 09fe8edd87e043a2b3626a8d4a73eed5
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1733685252730
+status: 3
+tags: []
+user_id: root

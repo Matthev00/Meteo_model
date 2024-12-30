@@ -3,7 +3,7 @@ from torch.utils.data import Dataset
 import pandas as pd
 from pathlib import Path
 from collections import defaultdict
-from typing import Dict
+from typing import Dict, Optional
 
 from meteo_model.data.config import LOCATIONS_NAMES, DATASET_START_YEAR, DATASET_END_YEAR
 
@@ -12,7 +12,7 @@ class MeteoDataset(Dataset):
     def __init__(
         self,
         root_dir: Path = Path("data/processed/weather_data"),
-        location: list[str] = None,
+        location: Optional[list[str]] = None,
         target_location: str = LOCATIONS_NAMES[0],
         input_len: int = 32,
         output_len: int = 8,
@@ -80,7 +80,9 @@ class MeteoDataset(Dataset):
 
         return year, day
 
-    def _get_sequence(self, year: int, start_day: int, end_day: int, locations: list[str]) -> list[list[list[float]]]:
+    def _get_sequence(
+        self, year: int, start_day: int, end_day: int, locations: list[str]
+    ) -> list[list[list[float]]]:
         """
         Get the sequence of data for the given year and days.
         Checks if the start_day and end_day are within the bounds of the given year.
@@ -103,7 +105,7 @@ class MeteoDataset(Dataset):
         return sequence
 
     def _get_target_sequence(self, year: int, day: int) -> list[list[list[float]]]:
-        start_day = day 
+        start_day = day
         end_day = day + self.output_len
         return self._get_sequence(year, start_day, end_day, [self.target_location])
 

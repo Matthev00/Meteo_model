@@ -57,8 +57,20 @@ create_environment:
 ## Run experiments
 .PHONY: run_experiments
 run_experiments:
-	$(PYTHON_INTERPRETER) meteo_model/training/perform_experiments.py
+	./meteo_model/training/run.sh
 
+
+## Corect MlFlow paths to models
+.PHONY: mlflow_models
+mlflow_models:
+	$(PYTHON_INTERPRETER) meteo_model/set_mlflow_paths.py
+
+## Run API and Streamlit application
+.PHONY: run_app
+run_app:
+	$(PYTHON_INTERPRETER) api/api.py & \
+	sleep 2 && $(PYTHON_INTERPRETER) -m streamlit run app/app.py & \
+	wait
 
 #################################################################################
 # PROJECT RULES                                                                 #

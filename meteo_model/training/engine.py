@@ -2,6 +2,7 @@ import torch
 import math
 from tqdm.auto import tqdm
 from meteo_model.utils.training_utils import mlflow_logging
+from typing import Optional
 
 
 @mlflow_logging
@@ -12,9 +13,10 @@ def train(
     optimizer: torch.optim.Optimizer,
     loss_fn: torch.nn.Module,
     epochs: int,
-    device="cuda",
-    enable_logging=True,
-    experiment_name="MeteoModelForecasting",
+    device: str = "cuda",
+    enable_logging: bool = True,
+    experiment_name: str = "MeteoModelForecasting",
+    scheduler: Optional[torch.optim.lr_scheduler.ReduceLROnPlateau] = None,
 ) -> dict[str, list[float]]:
 
     results: dict[str, list[float]] = {
@@ -42,6 +44,10 @@ def train(
         results["Test_MAE"].append(test_mae)
         results["Train_RMSE"].append(train_rmse)
         results["Test_RMSE"].append(test_rmse)
+
+        if scheduler:
+            scheduler.step(test_mse)
+
     return results
 
 
@@ -54,7 +60,7 @@ def train_step(
 ) -> tuple[float, float, float]:
     model.train()
     total_loss = 0
-    total_mae = 0
+    total_mae = 0.0
     total_samples = 0
     for batch, (inputs, targets) in enumerate(train_dataloader):
         inputs, targets = inputs.to(device), targets.to(device)
@@ -80,7 +86,7 @@ def test_step(
 ) -> tuple[float, float, float]:
     model.eval()
     total_loss = 0
-    total_mae = 0
+    total_mae = 0.0
     total_samples = 0
     with torch.inference_mode():
         for batch, (inputs, targets) in enumerate(test_dataloader):

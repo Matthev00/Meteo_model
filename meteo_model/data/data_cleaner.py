@@ -1,14 +1,16 @@
 import pandas as pd
 import numpy as np
 from pathlib import Path
+import os
 
 from meteo_model.utils.file_utils import prepare_directory
+from meteo_model.data.config import MEDIAN_DIR
 
 
 class DataCleaner:
-    def __init__(self, dataframes: list[pd.DataFrame], data_paths: list[Path]):
+    def __init__(self, dataframes, columns_to_drop=["station", "tsun", "wpgt"]):
         self.dataframes = dataframes
-        self.data_paths = data_paths
+        self.columns_to_drop = columns_to_drop
 
     def drop_columns(self) -> None:
         """
@@ -16,7 +18,7 @@ class DataCleaner:
         ['station', 'tsun', 'wpgt']
         """
         for df in self.dataframes:
-            df.drop(columns=["station", "tsun", "wpgt"], inplace=True)
+            df.drop(columns=self.columns_to_drop, inplace=True)
 
     def handle_NaN_based_on_trend(self) -> None:
         """
@@ -58,16 +60,28 @@ class DataCleaner:
 
         return median_by_day
 
-    def handle_NaN_based_on_sesonal_pattern(self) -> None:
+    def save_median_to_file(self, median_by_day: pd.DataFrame, file_path: Path) -> None:
+        median_by_day.to_csv(file_path, index=False)
+
+    def load_median_from_file(self, file_path: Path) -> pd.DataFrame:
+        return pd.read_csv(file_path)
+
+    def handle_NaN_based_on_sesonal_pattern(
+        self, median_file: Path, start_offset: int = 0
+    ) -> None:
         """
         Handle missing values in the data based on group. In Place.
         """
-        median_by_day = self.calculate_median_by_day()
+        if os.path.exists(median_file):
+            median_by_day = self.load_median_from_file(median_file)
+        else:
+            median_by_day = self.calculate_median_by_day()
+            self.save_median_to_file(median_by_day, median_file)
         for df in self.dataframes:
             for day in range((min(366, len(df)))):
                 for column in ["prcp", "wdir", "wspd", "pres"]:
                     if pd.isna(df.at[day, column]):
-                        df.at[day, column] = median_by_day.at[day, column]
+                        df.at[day, column] = median_by_day.at[day + start_offset, column]
 
     def clip_snow(self) -> None:
         """
@@ -75,6 +89,12 @@ class DataCleaner:
         """
         for df in self.dataframes:
             df["snow"] = df["snow"].clip(upper=800)
+
+
+class DataCleanerAndSaver(DataCleaner):
+    def __init__(self, dataframes: list[pd.DataFrame], data_paths: list[Path]):
+        super().__init__(dataframes)
+        self.data_paths = data_paths
 
     def save_data(self) -> None:
         """
@@ -84,3 +104,17 @@ class DataCleaner:
             processed_file_path = str(raw_path).replace("raw", "processed")
             prepare_directory(Path(processed_file_path).parent)
             df.to_csv(processed_file_path, index=False)
+
+
+class DataCleanerFromDict(DataCleaner):
+    def __init__(self, df: pd.DataFrame, city_name: str, date_offset: int):
+        super().__init__([df], ["tsun", "wpgt"])
+        self.city_name = city_name
+        self.date_offset = date_offset
+
+    def get_cleaned_df(self) -> None:
+        self.drop_columns()
+        self.handle_NaN_based_on_trend()
+        median_file = Path(MEDIAN_DIR) / f"{self.city_name}.csv"
+        self.handle_NaN_based_on_sesonal_pattern(median_file, self.date_offset)
+        self.clip_snow()

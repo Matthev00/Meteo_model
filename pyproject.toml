@@ -19,6 +19,7 @@ classifiers = [
 ]
 requires-python = "~=3.10"
 dependencies = [
+    "flask>=3.1.0",
     "ipykernel>=6.29.5",
     "jupyter>=1.1.1",
     "meteostat>=1.6.8",
@@ -26,11 +27,14 @@ dependencies = [
     "notebook>=7.2.2",
     "optuna>=4.1.0",
     "pandas>=2.2.3",
+    "plotly>=5.24.1",
+    "python-dotenv>=1.0.1",
     "pytorch-tcn>=1.2.1",
     "scipy>=1.14.1",
     "seaborn>=0.13.2",
     "streamlit>=1.40.1",
     "torch>=2.5.1",
+    "uvicorn>=0.32.1",
 ]
 
 [tool.black]
@@ -52,4 +56,7 @@ dev = [
     "black>=24.10.0",
     "flake8>=7.1.1",
     "mypy>=1.13.0",
+    "optuna-dashboard>=0.17.0",
+    "types-pyyaml>=6.0.12.20240917",
+    "types-requests>=2.32.0.20241016",
 ]
