@@ -43,6 +43,7 @@ def test_normalise_snow(data, stats):
     normalised = _normalise_snow(series, {"snow": stats})
     assert all(normalised >= 0)
 
+
 @given(data=st.lists(st.floats(min_value=0, max_value=360), min_size=10, max_size=10))
 def test_normalise_wdir(data):
     series = pd.Series(data)

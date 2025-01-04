@@ -46,8 +46,8 @@ def test_prepare_directory_creates_new_directory(subdir):
 
 
 @given(depth=st.integers(min_value=1, max_value=10), name=st.text(
-    min_size=1, 
-    max_size=10, 
+    min_size=1,
+    max_size=10,
     alphabet="abcdefghijklmnopqrstuvwxyz"
 ))
 def test_prepare_directory_creates_nested_directories(depth, name):
@@ -80,7 +80,6 @@ def test_prepare_directory_multiple_calls(subdir):
         assert path.exists() and path.is_dir()
         prepare_directory(path)
         assert path.exists() and path.is_dir()
-
 
 
 @given(
