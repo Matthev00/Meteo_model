@@ -18,37 +18,59 @@ requirements:
 	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
 	
 
-
-
 ## Delete all compiled Python files
 .PHONY: clean
 clean:
 	find . -type f -name "*.py[co]" -delete
 	find . -type d -name "__pycache__" -delete
 
+## Type-check using mypy
+.PHONY: type-check
+type-check:
+	mypy meteo_model
+
 ## Lint using flake8 and black (use `make format` to do formatting)
 .PHONY: lint
 lint:
-	flake8 zprp_meteo_model
-	isort --check --diff --profile black zprp_meteo_model
-	black --check --config pyproject.toml zprp_meteo_model
+	flake8 meteo_model
+	black --check --config pyproject.toml meteo_model
 
 ## Format source code with black
 .PHONY: format
 format:
-	black --config pyproject.toml zprp_meteo_model
+	black --config pyproject.toml meteo_model
 
-
+## Downloading and cleaning data
+.PHONY: prepare_data
+prepare_data:
+	$(PYTHON_INTERPRETER) meteo_model/data/prepare_weather_data.py
+	$(PYTHON_INTERPRETER) meteo_model/data/preprocess_data.py
 
 
 ## Set up python interpreter environment
 .PHONY: create_environment
 create_environment:
-	@bash -c "if [ ! -z `which virtualenvwrapper.sh` ]; then source `which virtualenvwrapper.sh`; mkvirtualenv $(PROJECT_NAME) --python=$(PYTHON_INTERPRETER); else mkvirtualenv.bat $(PROJECT_NAME) --python=$(PYTHON_INTERPRETER); fi"
-	@echo ">>> New virtualenv created. Activate with:\nworkon $(PROJECT_NAME)"
-	
+	$(PYTHON_INTERPRETER) -m venv .venv
+	@echo "Run 'source .venv/bin/activate' to activate the environment"
 
 
+## Run experiments
+.PHONY: run_experiments
+run_experiments:
+	./meteo_model/training/run.sh
+
+
+## Corect MlFlow paths to models
+.PHONY: mlflow_models
+mlflow_models:
+	$(PYTHON_INTERPRETER) meteo_model/set_mlflow_paths.py
+
+## Run API and Streamlit application
+.PHONY: run_app
+run_app:
+	$(PYTHON_INTERPRETER) api/api.py & \
+	sleep 2 && $(PYTHON_INTERPRETER) -m streamlit run app/app.py & \
+	wait
 
 #################################################################################
 # PROJECT RULES                                                                 #

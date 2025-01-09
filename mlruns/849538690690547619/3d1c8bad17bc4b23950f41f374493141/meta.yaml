@@ -1,0 +1,15 @@
+artifact_uri: file:///home/mateusz/PW/ZPRP/Projekt/zprp-meteo-model/mlruns/849538690690547619/3d1c8bad17bc4b23950f41f374493141/artifacts
+end_time: 1733684646347
+entry_point_name: ''
+experiment_id: '849538690690547619'
+lifecycle_stage: active
+run_id: 3d1c8bad17bc4b23950f41f374493141
+run_name: grandiose-vole-437
+run_uuid: 3d1c8bad17bc4b23950f41f374493141
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1733684574759
+status: 3
+tags: []
+user_id: root

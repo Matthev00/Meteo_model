@@ -1,0 +1,6 @@
+artifact_location: file:///content/zprp-meteo-model/mlruns/390647709600350888
+creation_time: 1733687300900
+experiment_id: '390647709600350888'
+last_update_time: 1733687300900
+lifecycle_stage: active
+name: best_6_days_models

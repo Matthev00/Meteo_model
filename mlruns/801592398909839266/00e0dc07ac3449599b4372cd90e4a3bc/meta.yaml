@@ -1,0 +1,15 @@
+artifact_uri: file:///home/mateusz/PW/ZPRP/Projekt/zprp-meteo-model/mlruns/801592398909839266/00e0dc07ac3449599b4372cd90e4a3bc/artifacts
+end_time: 1733492434454
+entry_point_name: ''
+experiment_id: '801592398909839266'
+lifecycle_stage: active
+run_id: 00e0dc07ac3449599b4372cd90e4a3bc
+run_name: angry-bird-452
+run_uuid: 00e0dc07ac3449599b4372cd90e4a3bc
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1733492286386
+status: 3
+tags: []
+user_id: mateusz
