@@ -102,8 +102,7 @@ Aby uruchomić projekt lokalnie:
 │   └── Analiza_Literatury.md
 │
 ├── notebooks          <- Notatniki Jupyter. Konwencja nazywania: numer + krótki opis
-│   ├── 02_exploratory_data_analysis.ipynb
-│   └── 03_perform_experiment.ipynb
+│   └── 01_exploratory_data_analysis.ipynb
 │
 ├── reports            <- Wygenerowane analizy, np. HTML, PDF
 │   |── figures        <- Grafiki i wykresy odnoszące sie do danych i modeli
