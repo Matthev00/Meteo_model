@@ -4,7 +4,7 @@
 
 PROJECT_NAME = ZPRP-METEO-MODEL
 PYTHON_VERSION = 3.10
-PYTHON_INTERPRETER = python
+PYTHON_INTERPRETER = python3
 
 #################################################################################
 # COMMANDS                                                                      #
@@ -14,8 +14,10 @@ PYTHON_INTERPRETER = python
 ## Install Python Dependencies
 .PHONY: requirements
 requirements:
-	$(PYTHON_INTERPRETER) -m pip install -U pip
-	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
+	$(PYTHON_INTERPRETER) -m pip install uv
+	uv sync
+#	$(PYTHON_INTERPRETER) -m pip install -U pip
+#	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
 	
 
 ## Delete all compiled Python files
