@@ -17,6 +17,5 @@ def prepare_pred_df(pred: torch.Tensor) -> pd.DataFrame:
 
 
 def get_dates(pred_end_day: str, n_days: int) -> pd.DatetimeIndex:
-    datetime.strptime(pred_end_day, "%Y-%m-%d")
-    start_date = datetime.strptime(pred_end_day, "%Y-%m-%d") + timedelta(days=1)
+    start_date = datetime.strptime(pred_end_day, "%Y-%m-%d %H:%M:%S") + timedelta(days=1)
     return pd.date_range(start=start_date, periods=n_days).strftime("%d-%m-%Y")

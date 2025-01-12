@@ -61,7 +61,7 @@ def transform_dict_into_df(weather_data) -> pd.DataFrame:
 
 
 def get_start_day_number(date_str: str) -> int:
-    date = datetime.strptime(date_str, "%Y-%m-%d")
+    date = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
     start_of_year = datetime(date.year, 1, 1)
     day_number = (date - start_of_year).days
     return day_number
