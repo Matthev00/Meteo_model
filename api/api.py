@@ -47,7 +47,7 @@ def predict():
             input_len[n_days], ["WARSAW", "WROCLAW", "POZNAN", "KRAKOW", "BIALYSTOK"]
         )
 
-        model = load_model(*model_for_days[n_days]).to(device)
+        model = load_model(*model_for_days[n_days], map_location=device)
         model.eval()
 
         with torch.inference_mode():
